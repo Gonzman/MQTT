@@ -1,0 +1,15 @@
+{
+  "name": "workspaces",
+  "private": "true",
+  "module": "index.ts",
+  "type": "module",
+  "workspaces": [
+    "packages/client",
+    "packages/server",
+    "packages/shared"
+  ],
+  "scripts": {
+    "dev-client": "cd packages/client && bun run dev",
+    "dev-server": "cd packages/server && bun run dev"
+  }
+}
