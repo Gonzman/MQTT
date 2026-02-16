@@ -1,0 +1,452 @@
+openapi: 3.1.0
+info:
+  title: MQTT API
+  description: ''
+  license:
+    name: ''
+  version: '1.0'
+servers:
+  - url: https://api.mqtt.tobi.tintuc.de
+    description: Production server
+paths:
+  /categories:
+    get:
+      tags:
+        - Categories
+      operationId: get_categories
+      responses:
+        '200':
+          description: Returns a list of categories
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Categories
+                required:
+                  - categories
+                properties:
+                  categories:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/CategoryDto'
+    post:
+      tags:
+        - Categories
+      operationId: post_categories
+      responses:
+        '201':
+          description: Creates a new category and returns it
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Category
+                required:
+                  - id
+                  - name
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                  name:
+                    type: string
+  /categories/{categoryId}:
+    get:
+      tags:
+        - Categories
+      operationId: get_category
+      parameters:
+        - name: categoryId
+          in: path
+          description: Category id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Returns the category
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Category
+                required:
+                  - id
+                  - name
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                  name:
+                    type: string
+    delete:
+      tags:
+        - Categories
+      operationId: delete_category
+      parameters:
+        - name: categoryId
+          in: path
+          description: Category id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Deletes the category
+    patch:
+      tags:
+        - Categories
+      operationId: patch_category
+      parameters:
+        - name: categoryId
+          in: path
+          description: Category id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Modifies the category and returns it
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Category
+                required:
+                  - id
+                  - name
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                  name:
+                    type: string
+  /categories/{category_id]/nodes:
+    get:
+      tags:
+        - Nodes
+      operationId: get_nodes
+      parameters:
+        - name: categoryId
+          in: path
+          description: Category id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Returns a list of nodes in a category
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Nodes
+                required:
+                  - nodes
+                properties:
+                  nodes:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/NodeDto'
+    post:
+      tags:
+        - Nodes
+      operationId: post_nodes
+      parameters:
+        - name: categoryId
+          in: path
+          description: Category id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '201':
+          description: Creates a new node and returns it
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Node
+                required:
+                  - categoryId
+                  - id
+                  - name
+                  - mqttTopic
+                properties:
+                  categoryId:
+                    type: string
+                    format: uuid
+                  id:
+                    type: string
+                    format: uuid
+                  mqttTopic:
+                    type: string
+                  name:
+                    type: string
+  /categories/{category_id]/nodes/{nodeId}:
+    get:
+      tags:
+        - Nodes
+      operationId: get_node
+      parameters:
+        - name: categoryId
+          in: path
+          description: Category id
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: nodeId
+          in: path
+          description: Node id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Returns the node
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Node
+                required:
+                  - categoryId
+                  - id
+                  - name
+                  - mqttTopic
+                properties:
+                  categoryId:
+                    type: string
+                    format: uuid
+                  id:
+                    type: string
+                    format: uuid
+                  mqttTopic:
+                    type: string
+                  name:
+                    type: string
+    delete:
+      tags:
+        - Nodes
+      operationId: delete_node
+      parameters:
+        - name: categoryId
+          in: path
+          description: Category id
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: nodeId
+          in: path
+          description: Node id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Deletes the node
+    patch:
+      tags:
+        - Nodes
+      operationId: patch_node
+      parameters:
+        - name: categoryId
+          in: path
+          description: Category id
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: nodeId
+          in: path
+          description: Node id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Modifies the node and returns it
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Node
+                required:
+                  - categoryId
+                  - id
+                  - name
+                  - mqttTopic
+                properties:
+                  categoryId:
+                    type: string
+                    format: uuid
+                  id:
+                    type: string
+                    format: uuid
+                  mqttTopic:
+                    type: string
+                  name:
+                    type: string
+  /health:
+    get:
+      tags:
+        - Health
+      operationId: get_health
+      responses:
+        '200':
+          description: Returns the health of the service
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Health
+                required:
+                  - status
+                properties:
+                  status:
+                    type: string
+  /mqtt/status:
+    get:
+      tags:
+        - MQTT
+      operationId: get_status
+      responses:
+        '200':
+          description: Returns the status of the MQTT connection
+          content:
+            application/json:
+              schema:
+                type: object
+                title: MqttStatus
+                required:
+                  - connected
+                properties:
+                  connected:
+                    type: boolean
+components:
+  schemas:
+    CategoriesDto:
+      type: object
+      title: Categories
+      required:
+        - categories
+      properties:
+        categories:
+          type: array
+          items:
+            $ref: '#/components/schemas/CategoryDto'
+    CategoryDto:
+      type: object
+      title: Category
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+    CreateCategoryDto:
+      type: object
+      title: CreateCategory
+      required:
+        - name
+      properties:
+        name:
+          type: string
+    CreateNodeDto:
+      type: object
+      title: CreateNode
+      required:
+        - name
+        - mqttTopic
+      properties:
+        mqttTopic:
+          type: string
+        name:
+          type: string
+    HealthDto:
+      type: object
+      title: Health
+      required:
+        - status
+      properties:
+        status:
+          type: string
+    ModifyCategoryDto:
+      type: object
+      title: ModifyCategory
+      properties:
+        name:
+          type:
+            - string
+            - 'null'
+    ModifyNodeDto:
+      type: object
+      title: ModifyNode
+      properties:
+        mqttTopic:
+          type:
+            - string
+            - 'null'
+        name:
+          type:
+            - string
+            - 'null'
+    MqttStatusDto:
+      type: object
+      title: MqttStatus
+      required:
+        - connected
+      properties:
+        connected:
+          type: boolean
+    NodeDto:
+      type: object
+      title: Node
+      required:
+        - categoryId
+        - id
+        - name
+        - mqttTopic
+      properties:
+        categoryId:
+          type: string
+          format: uuid
+        id:
+          type: string
+          format: uuid
+        mqttTopic:
+          type: string
+        name:
+          type: string
+    NodesDto:
+      type: object
+      title: Nodes
+      required:
+        - nodes
+      properties:
+        nodes:
+          type: array
+          items:
+            $ref: '#/components/schemas/NodeDto'
+tags:
+  - name: Health
+    description: Health API
+  - name: Categories
+    description: Categories API
+  - name: Nodes
+    description: Nodes API
+  - name: MQTT
+    description: MQTT API

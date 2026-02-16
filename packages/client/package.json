@@ -12,9 +12,11 @@
     "preview": "vite preview",
     "build-only": "vite build",
     "type-check": "vue-tsc --build",
-    "format": "prettier --write --experimental-cli src/"
+    "format": "prettier --write --experimental-cli src/",
+    "type-gen": "openapi-typescript ./openapi.yaml -o ./src/types/schema.d.ts"
   },
   "dependencies": {
+    "openapi-fetch": "^0.15.0",
     "vue": "^3.5.26",
     "vue-router": "^4.6.4"
   },
@@ -24,6 +26,7 @@
     "@vitejs/plugin-vue": "^6.0.3",
     "@vue/tsconfig": "^0.8.1",
     "npm-run-all2": "^8.0.4",
+    "openapi-typescript": "^7.10.1",
     "prettier": "3.7.4",
     "typescript": "~5.9.3",
     "vite": "^7.3.0",
