@@ -8,112 +8,25 @@
 </template>
 
 <script setup lang="ts">
-import type { CategoryDto } from '@/models/category';
+import { onMounted, ref, type Ref } from 'vue';
 import Node from './Node.vue';
-import type { NodeDto } from '@/models/node';
+import type { components } from '@/types/schema';
+import client from '@/lib/client';
 
 let props = defineProps<{
-    category: CategoryDto
+    category: components["schemas"]["CategoryDto"]
 }>();
 
-let nodes: NodeDto[] = [
-    {
-        id: "test-node-1",
-        category_id: props.category.id,
-        name: "Test Node 1",
-        mqtt_topic: "test/node/1"
-    },
-    {
-        id: "test-node-2",
-        category_id: props.category.id,
-        name: "Test Node 2",
-        mqtt_topic: "test/node/2"
-    },
-    {
-        id: "test-node-3",
-        category_id: props.category.id,
-        name: "Test Node 3",
-        mqtt_topic: "test/node/3"
-    },
-    {
-        id: "test-node-3",
-        category_id: props.category.id,
-        name: "Test Node 3",
-        mqtt_topic: "test/node/3"
-    },
-    {
-        id: "test-node-3",
-        category_id: props.category.id,
-        name: "Test Node 3",
-        mqtt_topic: "test/node/3"
-    },
-    {
-        id: "test-node-3",
-        category_id: props.category.id,
-        name: "Test Node 3",
-        mqtt_topic: "test/node/3"
-    },
-    {
-        id: "test-node-3",
-        category_id: props.category.id,
-        name: "Test Node 3",
-        mqtt_topic: "test/node/3"
-    },
-    {
-        id: "test-node-3",
-        category_id: props.category.id,
-        name: "Test Node 3",
-        mqtt_topic: "test/node/3"
-    },
-    {
-        id: "test-node-3",
-        category_id: props.category.id,
-        name: "Test Node 3",
-        mqtt_topic: "test/node/3"
-    },
-    {
-        id: "test-node-3",
-        category_id: props.category.id,
-        name: "Test Node 3",
-        mqtt_topic: "test/node/3"
-    },
-    {
-        id: "test-node-3",
-        category_id: props.category.id,
-        name: "Test Node 3",
-        mqtt_topic: "test/node/3"
-    },
-    {
-        id: "test-node-3",
-        category_id: props.category.id,
-        name: "Test Node 3",
-        mqtt_topic: "test/node/3"
-    },
-    {
-        id: "test-node-3",
-        category_id: props.category.id,
-        name: "Test Node 3",
-        mqtt_topic: "test/node/3"
-    },
-    {
-        id: "test-node-3",
-        category_id: props.category.id,
-        name: "Test Node 3",
-        mqtt_topic: "test/node/3"
-    },
-    {
-        id: "test-node-3",
-        category_id: props.category.id,
-        name: "Test Node 3",
-        mqtt_topic: "test/node/3"
-    },
-    {
-        id: "test-node-3",
-        category_id: props.category.id,
-        name: "Test Node 3",
-        mqtt_topic: "test/node/3"
-    },
-];
+
+const nodes: Ref<components["schemas"]["NodeDto"][]> = ref([]);
+
+onMounted(async () => {
+    const request = await client.GET("/categories/{category_id]/nodes", { params: { path: { categoryId: props.category.id } } });
+    if (request.data) {
+        nodes.value = request.data.nodes;
+    }
+})
+
 </script>
 
 <style scoped>

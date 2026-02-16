@@ -4,469 +4,469 @@
  */
 
 export interface paths {
-    "/categories": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["get_categories"];
-        put?: never;
-        post: operations["post_categories"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/categories/{categoryId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["get_category"];
-        put?: never;
-        post?: never;
-        delete: operations["delete_category"];
-        options?: never;
-        head?: never;
-        patch: operations["patch_category"];
-        trace?: never;
-    };
-    "/categories/{category_id]/nodes": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["get_nodes"];
-        put?: never;
-        post: operations["post_nodes"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/categories/{category_id]/nodes/{nodeId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["get_node"];
-        put?: never;
-        post?: never;
-        delete: operations["delete_node"];
-        options?: never;
-        head?: never;
-        patch: operations["patch_node"];
-        trace?: never;
-    };
-    "/health": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["get_health"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/mqtt/status": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["get_status"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
+  '/categories': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['get_categories']
+    put?: never
+    post: operations['post_categories']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/categories/{categoryId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['get_category']
+    put?: never
+    post?: never
+    delete: operations['delete_category']
+    options?: never
+    head?: never
+    patch: operations['patch_category']
+    trace?: never
+  }
+  '/categories/{category_id]/nodes': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['get_nodes']
+    put?: never
+    post: operations['post_nodes']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/categories/{category_id]/nodes/{nodeId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['get_node']
+    put?: never
+    post?: never
+    delete: operations['delete_node']
+    options?: never
+    head?: never
+    patch: operations['patch_node']
+    trace?: never
+  }
+  '/health': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['get_health']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/mqtt/status': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['get_status']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
 }
-export type webhooks = Record<string, never>;
+export type webhooks = Record<string, never>
 export interface components {
-    schemas: {
-        /** Categories */
-        CategoriesDto: {
-            categories: components["schemas"]["CategoryDto"][];
-        };
-        /** Category */
-        CategoryDto: {
-            /** Format: uuid */
-            id: string;
-            name: string;
-        };
-        /** CreateCategory */
-        CreateCategoryDto: {
-            name: string;
-        };
-        /** CreateNode */
-        CreateNodeDto: {
-            mqttTopic: string;
-            name: string;
-        };
-        /** Health */
-        HealthDto: {
-            status: string;
-        };
-        /** ModifyCategory */
-        ModifyCategoryDto: {
-            name?: string | null;
-        };
-        /** ModifyNode */
-        ModifyNodeDto: {
-            mqttTopic?: string | null;
-            name?: string | null;
-        };
-        /** MqttStatus */
-        MqttStatusDto: {
-            connected: boolean;
-        };
-        /** Node */
-        NodeDto: {
-            /** Format: uuid */
-            categoryId: string;
-            /** Format: uuid */
-            id: string;
-            mqttTopic: string;
-            name: string;
-        };
-        /** Nodes */
-        NodesDto: {
-            nodes: components["schemas"]["NodeDto"][];
-        };
-    };
-    responses: never;
-    parameters: never;
-    requestBodies: never;
-    headers: never;
-    pathItems: never;
+  schemas: {
+    /** Categories */
+    CategoriesDto: {
+      categories: components['schemas']['CategoryDto'][]
+    }
+    /** Category */
+    CategoryDto: {
+      /** Format: uuid */
+      id: string
+      name: string
+    }
+    /** CreateCategory */
+    CreateCategoryDto: {
+      name: string
+    }
+    /** CreateNode */
+    CreateNodeDto: {
+      mqttTopic: string
+      name: string
+    }
+    /** Health */
+    HealthDto: {
+      status: string
+    }
+    /** ModifyCategory */
+    ModifyCategoryDto: {
+      name?: string | null
+    }
+    /** ModifyNode */
+    ModifyNodeDto: {
+      mqttTopic?: string | null
+      name?: string | null
+    }
+    /** MqttStatus */
+    MqttStatusDto: {
+      connected: boolean
+    }
+    /** Node */
+    NodeDto: {
+      /** Format: uuid */
+      categoryId: string
+      /** Format: uuid */
+      id: string
+      mqttTopic: string
+      name: string
+    }
+    /** Nodes */
+    NodesDto: {
+      nodes: components['schemas']['NodeDto'][]
+    }
+  }
+  responses: never
+  parameters: never
+  requestBodies: never
+  headers: never
+  pathItems: never
 }
-export type $defs = Record<string, never>;
+export type $defs = Record<string, never>
 export interface operations {
-    get_categories: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Returns a list of categories */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        categories: components["schemas"]["CategoryDto"][];
-                    };
-                };
-            };
-        };
-    };
-    post_categories: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Creates a new category and returns it */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        /** Format: uuid */
-                        id: string;
-                        name: string;
-                    };
-                };
-            };
-        };
-    };
-    get_category: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Category id */
-                categoryId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Returns the category */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        /** Format: uuid */
-                        id: string;
-                        name: string;
-                    };
-                };
-            };
-        };
-    };
-    delete_category: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Category id */
-                categoryId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Deletes the category */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    patch_category: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Category id */
-                categoryId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Modifies the category and returns it */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        /** Format: uuid */
-                        id: string;
-                        name: string;
-                    };
-                };
-            };
-        };
-    };
-    get_nodes: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Category id */
-                categoryId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Returns a list of nodes in a category */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        nodes: components["schemas"]["NodeDto"][];
-                    };
-                };
-            };
-        };
-    };
-    post_nodes: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Category id */
-                categoryId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Creates a new node and returns it */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        /** Format: uuid */
-                        categoryId: string;
-                        /** Format: uuid */
-                        id: string;
-                        mqttTopic: string;
-                        name: string;
-                    };
-                };
-            };
-        };
-    };
-    get_node: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Category id */
-                categoryId: string;
-                /** @description Node id */
-                nodeId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Returns the node */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        /** Format: uuid */
-                        categoryId: string;
-                        /** Format: uuid */
-                        id: string;
-                        mqttTopic: string;
-                        name: string;
-                    };
-                };
-            };
-        };
-    };
-    delete_node: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Category id */
-                categoryId: string;
-                /** @description Node id */
-                nodeId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Deletes the node */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    patch_node: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Category id */
-                categoryId: string;
-                /** @description Node id */
-                nodeId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Modifies the node and returns it */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        /** Format: uuid */
-                        categoryId: string;
-                        /** Format: uuid */
-                        id: string;
-                        mqttTopic: string;
-                        name: string;
-                    };
-                };
-            };
-        };
-    };
-    get_health: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Returns the health of the service */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        status: string;
-                    };
-                };
-            };
-        };
-    };
-    get_status: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Returns the status of the MQTT connection */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        connected: boolean;
-                    };
-                };
-            };
-        };
-    };
+  get_categories: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Returns a list of categories */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            categories: components['schemas']['CategoryDto'][]
+          }
+        }
+      }
+    }
+  }
+  post_categories: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Creates a new category and returns it */
+      201: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** Format: uuid */
+            id: string
+            name: string
+          }
+        }
+      }
+    }
+  }
+  get_category: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /** @description Category id */
+        categoryId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Returns the category */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** Format: uuid */
+            id: string
+            name: string
+          }
+        }
+      }
+    }
+  }
+  delete_category: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /** @description Category id */
+        categoryId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Deletes the category */
+      204: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  patch_category: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /** @description Category id */
+        categoryId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Modifies the category and returns it */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** Format: uuid */
+            id: string
+            name: string
+          }
+        }
+      }
+    }
+  }
+  get_nodes: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /** @description Category id */
+        categoryId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Returns a list of nodes in a category */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            nodes: components['schemas']['NodeDto'][]
+          }
+        }
+      }
+    }
+  }
+  post_nodes: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /** @description Category id */
+        categoryId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Creates a new node and returns it */
+      201: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** Format: uuid */
+            categoryId: string
+            /** Format: uuid */
+            id: string
+            mqttTopic: string
+            name: string
+          }
+        }
+      }
+    }
+  }
+  get_node: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /** @description Category id */
+        categoryId: string
+        /** @description Node id */
+        nodeId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Returns the node */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** Format: uuid */
+            categoryId: string
+            /** Format: uuid */
+            id: string
+            mqttTopic: string
+            name: string
+          }
+        }
+      }
+    }
+  }
+  delete_node: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /** @description Category id */
+        categoryId: string
+        /** @description Node id */
+        nodeId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Deletes the node */
+      204: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  patch_node: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /** @description Category id */
+        categoryId: string
+        /** @description Node id */
+        nodeId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Modifies the node and returns it */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** Format: uuid */
+            categoryId: string
+            /** Format: uuid */
+            id: string
+            mqttTopic: string
+            name: string
+          }
+        }
+      }
+    }
+  }
+  get_health: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Returns the health of the service */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            status: string
+          }
+        }
+      }
+    }
+  }
+  get_status: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Returns the status of the MQTT connection */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            connected: boolean
+          }
+        }
+      }
+    }
+  }
 }

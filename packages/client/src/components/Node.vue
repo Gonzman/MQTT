@@ -6,10 +6,10 @@
 </template>
 
 <script setup lang="ts">
-import type { NodeDto } from '@/models/node';
+import type { components } from '@/types/schema';
 
 const props = defineProps<{
-    node: NodeDto
+    node: components["schemas"]["NodeDto"]
 }>();
 </script>
 
