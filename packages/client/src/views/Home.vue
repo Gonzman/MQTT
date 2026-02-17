@@ -24,9 +24,12 @@ onMounted(async () => {
 })
 
 async function createCategroy() {
-    const test = await client.POST("/categories")
+    const test = await client.POST("/categories", { body: { name: "test" } })
 
     console.log(test);
+    if (test.data) {
+        categories.value.push(test.data);
+    }
 }
 </script>
 
