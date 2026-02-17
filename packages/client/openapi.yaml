@@ -33,6 +33,18 @@ paths:
       tags:
         - Categories
       operationId: post_categories
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              title: CreateCategory
+              required:
+                - name
+              properties:
+                name:
+                  type: string
+        required: true
       responses:
         '201':
           description: Creates a new category and returns it
@@ -107,6 +119,19 @@ paths:
           schema:
             type: string
             format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              title: ModifyCategory
+              properties:
+                name:
+                  type:
+                    - string
+                    - 'null'
+              maxProperties: 1
+        required: true
       responses:
         '200':
           description: Modifies the category and returns it
@@ -124,7 +149,7 @@ paths:
                     format: uuid
                   name:
                     type: string
-  /categories/{category_id]/nodes:
+  /categories/{categoryId}/nodes:
     get:
       tags:
         - Nodes
@@ -164,6 +189,22 @@ paths:
           schema:
             type: string
             format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              title: CreateNode
+              required:
+                - name
+                - topicId
+              properties:
+                name:
+                  type: string
+                topicId:
+                  type: string
+                  format: uuid
+        required: true
       responses:
         '201':
           description: Creates a new node and returns it
@@ -176,7 +217,7 @@ paths:
                   - categoryId
                   - id
                   - name
-                  - mqttTopic
+                  - topicId
                 properties:
                   categoryId:
                     type: string
@@ -184,11 +225,12 @@ paths:
                   id:
                     type: string
                     format: uuid
-                  mqttTopic:
-                    type: string
                   name:
                     type: string
-  /categories/{category_id]/nodes/{nodeId}:
+                  topicId:
+                    type: string
+                    format: uuid
+  /categories/{categoryId}/nodes/{nodeId}:
     get:
       tags:
         - Nodes
@@ -220,7 +262,7 @@ paths:
                   - categoryId
                   - id
                   - name
-                  - mqttTopic
+                  - topicId
                 properties:
                   categoryId:
                     type: string
@@ -228,10 +270,11 @@ paths:
                   id:
                     type: string
                     format: uuid
-                  mqttTopic:
-                    type: string
                   name:
                     type: string
+                  topicId:
+                    type: string
+                    format: uuid
     delete:
       tags:
         - Nodes
@@ -273,6 +316,24 @@ paths:
           schema:
             type: string
             format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              title: ModifyNode
+              properties:
+                name:
+                  type:
+                    - string
+                    - 'null'
+                topicId:
+                  type:
+                    - string
+                    - 'null'
+                  format: uuid
+              maxProperties: 1
+        required: true
       responses:
         '200':
           description: Modifies the node and returns it
@@ -285,7 +346,7 @@ paths:
                   - categoryId
                   - id
                   - name
-                  - mqttTopic
+                  - topicId
                 properties:
                   categoryId:
                     type: string
@@ -293,10 +354,11 @@ paths:
                   id:
                     type: string
                     format: uuid
-                  mqttTopic:
-                    type: string
                   name:
                     type: string
+                  topicId:
+                    type: string
+                    format: uuid
   /health:
     get:
       tags:
@@ -333,6 +395,276 @@ paths:
                 properties:
                   connected:
                     type: boolean
+  /topics:
+    get:
+      tags:
+        - Topics
+      operationId: get_topics
+      responses:
+        '200':
+          description: Returns a list of topics
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Topics
+                required:
+                  - topics
+                properties:
+                  topics:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/TopicDto'
+    post:
+      tags:
+        - Topics
+      operationId: post_topics
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              title: CreateTopic
+              required:
+                - mqttTopic
+              properties:
+                mqttTopic:
+                  type: string
+                name:
+                  type:
+                    - string
+                    - 'null'
+        required: true
+      responses:
+        '201':
+          description: Creates a new topic and returns it
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Topic
+                required:
+                  - id
+                  - mqttTopic
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                  mqttTopic:
+                    type: string
+                  name:
+                    type:
+                      - string
+                      - 'null'
+  /topics/{topicId}:
+    get:
+      tags:
+        - Topics
+      operationId: get_topic
+      parameters:
+        - name: topicId
+          in: path
+          description: Topic id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Returns the topic
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Topic
+                required:
+                  - id
+                  - mqttTopic
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                  mqttTopic:
+                    type: string
+                  name:
+                    type:
+                      - string
+                      - 'null'
+    delete:
+      tags:
+        - Topics
+      operationId: delete_topic
+      parameters:
+        - name: topicId
+          in: path
+          description: Topic id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Deletes the topic
+    patch:
+      tags:
+        - Topics
+      operationId: patch_topic
+      parameters:
+        - name: topicId
+          in: path
+          description: Topic id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              title: ModifyTopic
+              description: Optional name field! If the name field is omitted, the existing
+                name remains unchanged. If the name field is explicitly null,
+                the name is cleared (unset). If a string value is provided, the
+                name is updated to that value.
+              properties:
+                mqttTopic:
+                  type:
+                    - string
+                    - 'null'
+                name:
+                  type:
+                    - string
+                    - 'null'
+              maxProperties: 1
+        required: true
+      responses:
+        '200':
+          description: Modifies the topic and returns it
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Topic
+                required:
+                  - id
+                  - mqttTopic
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                  mqttTopic:
+                    type: string
+                  name:
+                    type:
+                      - string
+                      - 'null'
+  /topics/{topicId}/values:
+    get:
+      tags:
+        - Values
+      operationId: get_values
+      parameters:
+        - name: topicId
+          in: path
+          description: Topic id
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: limit
+          in: query
+          description: Limit of values to return. Minimum = 1, Maximum = 500 and Default =
+            100. If neither before nor after are provided, the latest values are
+            returned.
+          required: false
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+        - name: before
+          in: query
+          description: Get values before this value. If both before and after are
+            provided, before takes precedence.
+          required: false
+          schema:
+            type: string
+            format: uuid
+        - name: after
+          in: query
+          description: Get values after this value.
+          required: false
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Returns a list of values in a topic
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Values
+                required:
+                  - values
+                properties:
+                  values:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ValueDto'
+  /topics/{topicId}/values/{valueId}:
+    get:
+      tags:
+        - Values
+      operationId: get_value
+      parameters:
+        - name: topicId
+          in: path
+          description: Topic id
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: valueId
+          in: path
+          description: Value id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Returns the value
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Value
+                required:
+                  - topicId
+                  - id
+                  - value
+                  - createdAt
+                properties:
+                  createdAt:
+                    type: string
+                    format: date-time
+                  id:
+                    type: string
+                    format: uuid
+                  topicId:
+                    type: string
+                    format: uuid
+                  value:
+                    type: string
+  /ws:
+    get:
+      tags:
+        - WebSocket
+      operationId: get_ws
+      responses:
+        '101':
+          description: Upgrade to a WebSocket connection
 components:
   schemas:
     CategoriesDto:
@@ -370,12 +702,25 @@ components:
       title: CreateNode
       required:
         - name
+        - topicId
+      properties:
+        name:
+          type: string
+        topicId:
+          type: string
+          format: uuid
+    CreateTopicDto:
+      type: object
+      title: CreateTopic
+      required:
         - mqttTopic
       properties:
         mqttTopic:
           type: string
         name:
-          type: string
+          type:
+            - string
+            - 'null'
     HealthDto:
       type: object
       title: Health
@@ -392,9 +737,28 @@ components:
           type:
             - string
             - 'null'
+      maxProperties: 1
     ModifyNodeDto:
       type: object
       title: ModifyNode
+      properties:
+        name:
+          type:
+            - string
+            - 'null'
+        topicId:
+          type:
+            - string
+            - 'null'
+          format: uuid
+      maxProperties: 1
+    ModifyTopicDto:
+      type: object
+      title: ModifyTopic
+      description: Optional name field! If the name field is omitted, the existing
+        name remains unchanged. If the name field is explicitly null, the name
+        is cleared (unset). If a string value is provided, the name is updated
+        to that value.
       properties:
         mqttTopic:
           type:
@@ -404,6 +768,7 @@ components:
           type:
             - string
             - 'null'
+      maxProperties: 1
     MqttStatusDto:
       type: object
       title: MqttStatus
@@ -419,7 +784,7 @@ components:
         - categoryId
         - id
         - name
-        - mqttTopic
+        - topicId
       properties:
         categoryId:
           type: string
@@ -427,10 +792,11 @@ components:
         id:
           type: string
           format: uuid
-        mqttTopic:
-          type: string
         name:
           type: string
+        topicId:
+          type: string
+          format: uuid
     NodesDto:
       type: object
       title: Nodes
@@ -441,6 +807,62 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/NodeDto'
+    TopicDto:
+      type: object
+      title: Topic
+      required:
+        - id
+        - mqttTopic
+      properties:
+        id:
+          type: string
+          format: uuid
+        mqttTopic:
+          type: string
+        name:
+          type:
+            - string
+            - 'null'
+    TopicsDto:
+      type: object
+      title: Topics
+      required:
+        - topics
+      properties:
+        topics:
+          type: array
+          items:
+            $ref: '#/components/schemas/TopicDto'
+    ValueDto:
+      type: object
+      title: Value
+      required:
+        - topicId
+        - id
+        - value
+        - createdAt
+      properties:
+        createdAt:
+          type: string
+          format: date-time
+        id:
+          type: string
+          format: uuid
+        topicId:
+          type: string
+          format: uuid
+        value:
+          type: string
+    ValuesDto:
+      type: object
+      title: Values
+      required:
+        - values
+      properties:
+        values:
+          type: array
+          items:
+            $ref: '#/components/schemas/ValueDto'
 tags:
   - name: Health
     description: Health API
@@ -448,5 +870,11 @@ tags:
     description: Categories API
   - name: Nodes
     description: Nodes API
+  - name: Topics
+    description: Topics API
+  - name: Values
+    description: Values API
   - name: MQTT
     description: MQTT API
+  - name: WebSocket
+    description: WebSocket API

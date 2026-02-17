@@ -5,6 +5,8 @@
             <Node v-for="node in nodes" :node="node"></Node>
         </div>
     </div>
+    <button @click="createNode">Create Node</button>
+
 </template>
 
 <script setup lang="ts">
@@ -21,11 +23,29 @@ let props = defineProps<{
 const nodes: Ref<components["schemas"]["NodeDto"][]> = ref([]);
 
 onMounted(async () => {
-    const request = await client.GET("/categories/{category_id]/nodes", { params: { path: { categoryId: props.category.id } } });
+    const request = await client.GET("/categories/{categoryId}/nodes", { params: { path: { categoryId: props.category.id } } });
     if (request.data) {
         nodes.value = request.data.nodes;
     }
 })
+
+
+async function createNode() {
+
+    const topicRequest = await client.POST("/topics", {
+        body: { mqttTopic: "121", name: "122" },
+    });
+
+    if (!topicRequest.data) {
+        return;
+    }
+
+    const request = await client.POST("/categories/{categoryId}/nodes", { params: { path: { categoryId: props.category.id } }, body: { name: "12", topicId: topicRequest.data.id } });
+
+    if (request.data) {
+        nodes.value.push(request.data);
+    }
+}
 
 </script>
 
