@@ -10,14 +10,18 @@
             </div>
         </template>
         <template #default>
-            <div class="value">—</div>
+            <div class="value" v-for="value in data">{{ value.id }}</div>
         </template>
     </UCard>
 </template>
 
 <script setup lang="ts">
 import client from '@/lib/client';
-import type { components } from '@/types/schema';
+import dataManager from '@/lib/dataManager';
+import type { components } from '@/types/schema'
+import { ref, onMounted } from 'vue';
+
+let data = ref<components["schemas"]["ValueDto"][]>()
 
 const props = defineProps<{
     node: components["schemas"]["NodeDto"]
@@ -35,6 +39,13 @@ async function deleteNode() {
     model.value = model.value.filter((x) => x.id != props.node.id)
 
 }
+
+onMounted(async () => {
+    const result = await dataManager.listenForData(props.node.id);
+    if (result) {
+        data = result;
+    }
+})
 </script>
 
 <style scoped>

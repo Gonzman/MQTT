@@ -1,6 +1,6 @@
 <template>
 
-    <UButton @click="createCategroy">Create Category</UButton>
+    <Modal v-model="categories"></Modal>
 
     <Category v-for="category in categories" :category="category" v-model="categories"></Category>
 
@@ -9,12 +9,16 @@
 
 <script setup lang="ts">
 import Category from '@/components/Category.vue';
+import Modal from '@/components/modal/category/modal.vue';
 import client from '@/lib/client';
+import dataManager from '@/lib/dataManager';
 import type { CategoryDto } from '@/models/category';
 import type { components } from '@/types/schema';
 import { onMounted, ref, type Ref } from 'vue';
 
 const categories: Ref<components["schemas"]["CategoryDto"][]> = ref([])
+
+const test = dataManager
 
 onMounted(async () => {
     const data = await client.GET("/categories");
