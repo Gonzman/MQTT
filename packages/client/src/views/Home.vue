@@ -1,8 +1,8 @@
 <template>
 
-    <button @click="createCategroy"></button>
+    <button @click="createCategroy">Create Category</button>
 
-    <Category v-for="category in categories" :category="category"></Category>
+    <Category v-for="category in categories" :category="category" v-model="categories"></Category>
 
     {{ categories.length }}
 </template>
