@@ -1,13 +1,22 @@
 <template>
-    <div class="category">
-        <button @click="deleteCategory">x</button>
-        <p class="label">{{ category.name }}</p>
+    <UCard class="category-card">
+        <div class="category-header">
+            <div class="title">
+                <p class="label">{{ category.name }}</p>
+                <div class="meta">{{ nodes.length }} node<span v-if="nodes.length !== 1">s</span></div>
+            </div>
+
+            <div class="actions">
+                <Modal :category="category.id" v-model="nodes"></Modal>
+                <UButton class="delete-btn" @click="deleteCategory" aria-label="Delete category" color="error">×
+                </UButton>
+            </div>
+        </div>
+
         <div class="nodes">
             <Node v-for="node in nodes" :key="node.id" :node="node" v-model="nodes" />
         </div>
-    </div>
-    <button @click="createNode">Create Node</button>
-
+    </UCard>
 </template>
 
 <script setup lang="ts">
@@ -15,6 +24,7 @@ import { onMounted, ref, type Ref } from 'vue';
 import Node from './Node.vue';
 import type { components } from '@/types/schema';
 import client from '@/lib/client';
+import Modal from './modal/node/modal.vue';
 
 let props = defineProps<{
     category: components["schemas"]["CategoryDto"]
@@ -61,21 +71,103 @@ async function deleteCategory() {
 </script>
 
 <style scoped>
-.category {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    background-color: lightcoral;
+.category-card {
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(15, 23, 42, 0.06);
+    background: transparent;
+    box-shadow: none;
 }
 
-.label {}
+.category-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.title {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.label {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.meta {
+    font-size: 0.72rem;
+    color: #6b7280;
+}
+
+.actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.create-btn,
+.delete-btn {
+    background: transparent;
+    border: none;
+    color: #9ca3af;
+    font-weight: 700;
+    padding: 6px 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 120ms ease, color 120ms ease;
+}
+
+.create-btn:hover {
+    background: rgba(16, 185, 129, 0.06);
+    color: #059669;
+}
+
+.delete-btn:hover {
+    background: rgba(239, 68, 68, 0.04);
+    color: #ef4444;
+}
 
 .nodes {
     display: grid;
-    width: 100%;
-    grid-template-columns: repeat(auto-fit, minmax(10rem, 15rem));
-    padding: 0.5rem;
-    gap: 0.5rem;
-    background-color: lightblue;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+}
+
+@media (prefers-color-scheme: dark) {
+    .category-card {
+        border-color: rgba(255, 255, 255, 0.04);
+    }
+
+    .label {
+        color: #e6edf3;
+    }
+
+    .meta {
+        color: #9aa3ad;
+    }
+
+    .create-btn,
+    .delete-btn {
+        color: #9aa3ad;
+    }
+
+    .create-btn:hover {
+        background: rgba(16, 185, 129, 0.12);
+    }
+
+    .delete-btn:hover {
+        background: rgba(239, 68, 68, 0.12);
+        color: #fecaca;
+    }
+
+    .nodes :deep(.node-card) {
+        border-color: rgba(255, 255, 255, 0.02);
+    }
 }
 </style>

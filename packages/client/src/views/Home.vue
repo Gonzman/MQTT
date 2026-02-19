@@ -1,6 +1,6 @@
 <template>
 
-    <button @click="createCategroy">Create Category</button>
+    <UButton @click="createCategroy">Create Category</UButton>
 
     <Category v-for="category in categories" :category="category" v-model="categories"></Category>
 
