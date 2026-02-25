@@ -90,7 +90,7 @@ class DataManager {
       return this.data[id]
     }
     const request = await client.GET('/topics/{topicId}/values', {
-      params: { path: { topicId: id } },
+      params: { path: { topicId: id }, query: { limit: 1 } },
     })
 
     if (!request.data) {

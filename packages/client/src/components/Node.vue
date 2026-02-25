@@ -41,7 +41,7 @@ async function deleteNode() {
 }
 
 onMounted(async () => {
-    const result = await dataManager.listenForData(props.node.id);
+    const result = await dataManager.listenForData(props.node.topicId);
     if (result) {
         data = result;
     }
