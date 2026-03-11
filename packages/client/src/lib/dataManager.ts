@@ -24,6 +24,7 @@ class DataManager {
   private static instance: DataManager
 
   private data: Record<string, Ref<ValueDto[]>> = {}
+  private pending: Record<string, Promise<Ref<ValueDto[]> | undefined>> = {}
 
   private ws: WebSocket
 
@@ -89,17 +90,30 @@ class DataManager {
     if (this.data[id]) {
       return this.data[id]
     }
-    const request = await client.GET('/topics/{topicId}/values', {
-      params: { path: { topicId: id }, query: { limit: 1 } },
-    })
 
-    if (!request.data) {
-      return
+    if (this.pending[id]) {
+      return this.pending[id]
     }
 
-    this.data[id] = ref(request.data.values)
+    this.pending[id] = (async () => {
+      const request = await client.GET('/topics/{topicId}/values', {
+        params: { path: { topicId: id }, query: { limit: 1 } },
+      })
 
-    return this.data[id]
+      if (!request.data) {
+        return undefined
+      }
+
+      this.data[id] = ref(request.data.values)
+
+      return this.data[id]
+    })()
+
+    try {
+      return await this.pending[id]
+    } finally {
+      delete this.pending[id]
+    }
   }
 
   public static getInstance(): DataManager {

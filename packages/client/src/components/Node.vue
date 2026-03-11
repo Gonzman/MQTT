@@ -10,7 +10,7 @@
             </div>
         </template>
         <template #default>
-            <div class="value" v-for="value in data">{{ value.id }}</div>
+            <div class="value">{{ data[data.length - 1]?.value ?? "No Data" }}</div>
         </template>
     </UCard>
 </template>
@@ -19,9 +19,10 @@
 import client from '@/lib/client';
 import dataManager from '@/lib/dataManager';
 import type { components } from '@/types/schema'
-import { ref, onMounted } from 'vue';
+import { ref, watch, onMounted, onUnmounted } from 'vue';
 
-let data = ref<components["schemas"]["ValueDto"][]>()
+const data = ref<components["schemas"]["ValueDto"][]>([])
+let stopSync: (() => void) | null = null
 
 const props = defineProps<{
     node: components["schemas"]["NodeDto"]
@@ -41,10 +42,20 @@ async function deleteNode() {
 }
 
 onMounted(async () => {
+    if (!props.node.topicId) {
+        return;
+    }
+
     const result = await dataManager.listenForData(props.node.topicId);
     if (result) {
-        data = result;
+        stopSync = watch(result, (next) => {
+            data.value = next;
+        }, { immediate: true, deep: true });
     }
+})
+
+onUnmounted(() => {
+    stopSync?.();
 })
 </script>
 
