@@ -1,6 +1,6 @@
 <template>
     <UModal :title="node.name" description="Live readings and graph history." :ui="{ content: 'max-w-7xl' }">
-        <UCard class="node-card">
+        <UCard class="surface-card node-card">
             <!-- Description -->
             <template #header @click="">
                 <div class="header">
@@ -19,7 +19,7 @@
             </template>
         </UCard>
         <template #content>
-            <UCard class="graph-card">
+            <UCard class="surface-card graph-card">
                 <template #default>
                     <NodeGraph :node="node" :data="data" />
                 </template>
@@ -82,17 +82,11 @@
     .node-card {
         padding: 10px;
         border-radius: 10px;
-        border: 1px solid rgba(15, 23, 42, 0.06);
-        background: transparent;
-        box-shadow: none;
     }
 
     .graph-card {
         padding: 20px;
         border-radius: 16px;
-        border: 1px solid rgba(15, 23, 42, 0.06);
-        background: transparent;
-        box-shadow: none;
     }
 
     .header {
@@ -128,14 +122,6 @@
     }
 
     @media (prefers-color-scheme: dark) {
-        .node-card {
-            border-color: rgba(255, 255, 255, 0.04);
-        }
-
-        .graph-card {
-            border-color: rgba(255, 255, 255, 0.04);
-        }
-
         .name {
             color: #e6edf3;
         }

@@ -1,7 +1,9 @@
 <template>
-    <UInput placeholder="Name" v-model="name" />
+    <UInput class="modal-field" placeholder="Name" v-model="name" />
 
-    <UButton color="success" @click="createCategory">Create Node</UButton>
+    <div class="modal-actions">
+        <UButton color="success" @click="createCategory">Create Category</UButton>
+    </div>
 </template>
 <script setup lang="ts">
     import client from "@/lib/client";

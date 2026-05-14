@@ -16,8 +16,14 @@
         <UButton label="New Category" icon="lucide:book-plus" />
 
         <template #content>
-            <div class="flex items-center justify-center h-48 m-4">
-                <div class="text-center">
+            <div class="modal-panel">
+                <div class="modal-header">
+                    <p class="modal-kicker">Category</p>
+                    <p class="modal-title">Create a new category</p>
+                    <p class="modal-description">Give the category a name and save it.</p>
+                </div>
+
+                <div class="modal-form">
                     <Fields v-model="model" @close="close" />
                 </div>
             </div>

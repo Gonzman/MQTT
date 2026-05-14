@@ -1,8 +1,19 @@
 <template>
-    <UInput placeholder="Name" v-model="name" />
+    <UInput class="modal-field" placeholder="Name" v-model="name" />
     <USelectMenu v-model="selected" v-model:search-term="search" :items="topics" label-key="mqttTopic" search-input
-        create-item @create="handleCreate" placeholder="Select or create MQTT topic" class="h-max" />
-    <UButton color="success" @click="createNode">Create Node</UButton>
+        create-item @create="handleCreate" placeholder="Select or create MQTT topic" class="modal-field">
+        <template #item="{ item }">
+            <div class="topic-option">
+                <span class="topic-option__label">{{ item.mqttTopic }}</span>
+
+                <UButton class="topic-option__delete" variant="ghost" color="neutral" size="xs" icon="lucide:trash-2"
+                    aria-label="Delete topic" @mousedown.stop.prevent @click.stop="deleteTopic(item)" />
+            </div>
+        </template>
+    </USelectMenu>
+    <div class="modal-actions">
+        <UButton color="success" @click="createNode">Create Node</UButton>
+    </div>
 </template>
 <script setup lang="ts">
     import client from "@/lib/client";
@@ -42,6 +53,32 @@
 
         topics.value.push(newTopic);
         selected.value = newTopic;
+    }
+
+    async function deleteTopic(topic: components["schemas"]["TopicDto"]) {
+        if (topic.id === "CHANGEUUID") {
+            topics.value = topics.value.filter((candidate) => candidate.id !== topic.id);
+
+            if (selected.value?.id === topic.id) {
+                selected.value = undefined;
+            }
+
+            return;
+        }
+
+        const request = await client.DELETE("/topics/{topicId}", {
+            params: { path: { topicId: topic.id } }
+        });
+
+        if (!request.response.ok) {
+            return;
+        }
+
+        topics.value = topics.value.filter((candidate) => candidate.id !== topic.id);
+
+        if (selected.value?.id === topic.id) {
+            selected.value = undefined;
+        }
     }
 
     async function createNode() {
@@ -86,3 +123,24 @@
         topics.value = response.data.topics;
     });
 </script>
+
+<style scoped>
+    .topic-option {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        width: 100%;
+    }
+
+    .topic-option__label {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .topic-option__delete {
+        flex: none;
+    }
+</style>

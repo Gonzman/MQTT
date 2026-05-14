@@ -1,5 +1,5 @@
 <template>
-    <UCard class="category-card">
+    <UCard class="surface-card category-card">
         <div class="category-header">
             <div class="title">
                 <p class="label">{{ category.name }}</p>
@@ -60,9 +60,6 @@
     .category-card {
         padding: 12px;
         border-radius: 10px;
-        border: 1px solid rgba(15, 23, 42, 0.06);
-        background: transparent;
-        box-shadow: none;
     }
 
     .category-header {
@@ -104,10 +101,6 @@
     }
 
     @media (prefers-color-scheme: dark) {
-        .category-card {
-            border-color: rgba(255, 255, 255, 0.04);
-        }
-
         .label {
             color: #e6edf3;
         }
@@ -116,8 +109,5 @@
             color: #9aa3ad;
         }
 
-        .nodes :deep(.node-card) {
-            border-color: rgba(255, 255, 255, 0.02);
-        }
     }
 </style>

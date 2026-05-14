@@ -34,7 +34,7 @@
         value: number;
     };
 
-    const PRE_DATA_PLOT_POINTS: PlotPoint[] = [{ label: "FIRST", value: 20 }];
+    const PRE_DATA_PLOT_POINTS: PlotPoint[] = [];
 
     function extractValueSymbol(value: string) {
         const match = value.match(/^\s*[-+]?\d*\.?\d+(?:[eE][-+]?\d+)?\s*(.*)$/);

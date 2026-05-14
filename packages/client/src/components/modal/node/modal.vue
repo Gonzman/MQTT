@@ -20,8 +20,14 @@
         </UTooltip>
 
         <template #content>
-            <div class="flex items-center justify-center h-48 m-4">
-                <div class="text-center">
+            <div class="modal-panel">
+                <div class="modal-header">
+                    <p class="modal-kicker">Node</p>
+                    <p class="modal-title">Create a new node</p>
+                    <p class="modal-description">Set a name and pick or create a topic.</p>
+                </div>
+
+                <div class="modal-form">
                     <Fields :category="props.category" v-model="model" @close="close" />
                 </div>
             </div>

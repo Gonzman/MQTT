@@ -27,15 +27,6 @@
     color: #6b7280;
 }
 
-.graph-canvas-wrap,
-.graph-empty {
-    min-height: clamp(20rem, 45vh, 32rem);
-}
-
-.graph-canvas-wrap {
-    position: relative;
-}
-
 .graph-canvas {
     display: block;
     width: 100% !important;

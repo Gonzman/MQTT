@@ -2,5 +2,19 @@
 @import "@nuxt/ui";
 
 body {
-    height: 100vh;
+    min-height: 100vh;
+    margin: 0;
+    background-color: #dbe3ef;
+    color: #0f172a;
+}
+
+#app {
+    min-height: 100vh;
+}
+
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #0b1220;
+        color: #e2e8f0;
+    }
 }
