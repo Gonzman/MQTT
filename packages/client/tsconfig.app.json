@@ -1,15 +1,42 @@
 {
-  "extends": "@vue/tsconfig/tsconfig.dom.json",
-  "include": ["env.d.ts", "src/**/*", "src/**/*.vue","src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "auto-imports.d.ts", "components.d.ts"],
-  "exclude": ["src/**/__tests__/*"],
-  "compilerOptions": {
-    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
-
-    "paths": {
-      "@/*": ["./src/*"],
-      "#build/ui/*": [
-        "./node_modules/.nuxt-ui/ui/*"
-      ]
+    "extends": "@vue/tsconfig/tsconfig.dom.json",
+    "include": [
+        "env.d.ts",
+        "src/**/*",
+        "src/**/*.vue",
+        "src/**/*.ts",
+        "src/**/*.tsx",
+        "src/**/*.vue",
+        "auto-imports.d.ts",
+        "components.d.ts"
+    ],
+    "exclude": [
+        "src/**/__tests__/*"
+    ],
+    "compilerOptions": {
+        "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+        "paths": {
+            "@/*": [
+                "./src/*"
+            ],
+            "@view/*": [
+                "./src/views/*"
+            ],
+            "@store/*": [
+                "./src/stores/*"
+            ],
+            "@component/*": [
+                "./src/components/*"
+            ],
+            "@asset/*": [
+                "./src/assets/*"
+            ],
+            "@router/*": [
+                "./src/router/*"
+            ],
+            "#build/ui/*": [
+                "./node_modules/.nuxt-ui/ui/*"
+            ]
+        }
     }
-  }
 }

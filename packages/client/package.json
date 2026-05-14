@@ -16,23 +16,24 @@
     "type-gen": "openapi-typescript ./openapi.yaml -o ./src/types/schema.d.ts"
   },
   "dependencies": {
-    "@nuxt/ui": "^4.4.0",
-    "openapi-fetch": "^0.15.0",
-    "tailwindcss": "^4.2.0",
-    "vue": "^3.5.26",
+    "@nuxt/ui": "^4.7.1",
+    "chart.js": "^4.5.1",
+    "openapi-fetch": "^0.15.2",
+    "tailwindcss": "^4.3.0",
+    "vue": "^3.5.34",
     "vue-router": "^4.6.4"
   },
   "devDependencies": {
-    "@tsconfig/node24": "^24.0.3",
-    "@types/node": "^24.10.4",
-    "@vitejs/plugin-vue": "^6.0.3",
+    "@tsconfig/node24": "^24.0.4",
+    "@types/node": "^24.12.4",
+    "@vitejs/plugin-vue": "^6.0.6",
     "@vue/tsconfig": "^0.8.1",
     "npm-run-all2": "^8.0.4",
-    "openapi-typescript": "^7.10.1",
+    "openapi-typescript": "^7.13.0",
     "prettier": "3.7.4",
     "typescript": "~5.9.3",
-    "vite": "^7.3.0",
-    "vite-plugin-vue-devtools": "^8.0.5",
-    "vue-tsc": "^3.2.2"
+    "vite": "^7.3.3",
+    "vite-plugin-vue-devtools": "^8.1.2",
+    "vue-tsc": "^3.2.9"
   }
 }
