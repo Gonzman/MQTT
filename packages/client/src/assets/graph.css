@@ -1,0 +1,70 @@
+.graph-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+    min-width: 0;
+}
+
+.graph-header {
+    display: flex;
+    align-items: start;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.graph-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #0f172a;
+    line-height: 1.2;
+}
+
+.graph-subtitle,
+.graph-count {
+    margin-top: 4px;
+    font-size: 0.8rem;
+    color: #6b7280;
+}
+
+.graph-canvas-wrap,
+.graph-empty {
+    min-height: clamp(20rem, 45vh, 32rem);
+}
+
+.graph-canvas-wrap {
+    position: relative;
+}
+
+.graph-canvas {
+    display: block;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.graph-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px dashed rgba(148, 163, 184, 0.28);
+    border-radius: 12px;
+    color: #6b7280;
+    background: rgba(148, 163, 184, 0.04);
+}
+
+@media (prefers-color-scheme: dark) {
+    .graph-title {
+        color: #e6edf3;
+    }
+
+    .graph-subtitle,
+    .graph-count,
+    .graph-empty {
+        color: #9aa3ad;
+    }
+
+    .graph-empty {
+        border-color: rgba(148, 163, 184, 0.18);
+        background: rgba(148, 163, 184, 0.08);
+    }
+}
