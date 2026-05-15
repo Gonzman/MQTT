@@ -46,7 +46,24 @@ export function formatGraphMinuteKey(value: string) {
     return String(Math.floor(date.getTime() / 60000));
 }
 
-export function getGraphYAxisBounds(points: GraphPoint[]) {
+function isPercentageSymbol(valueSymbol: string) {
+    return valueSymbol === "%" || valueSymbol.toLowerCase() === "percent";
+}
+
+function formatGraphValue(value: number, valueSymbol: string) {
+    const formattedValue = isPercentageSymbol(valueSymbol) ? value.toFixed(0) : value.toFixed(1);
+
+    return `${formattedValue}${valueSymbol ? ` ${valueSymbol}` : ""}`;
+}
+
+export function getGraphYAxisBounds(points: GraphPoint[], valueSymbol = "") {
+    if (isPercentageSymbol(valueSymbol)) {
+        return {
+            min: 0,
+            max: 100
+        };
+    }
+
     const values = points.map((point) => point.value).filter((value) => Number.isFinite(value));
 
     if (!values.length) {
@@ -128,7 +145,7 @@ export function buildGraphChartData(nodeName: string, points: GraphPoint[]): Cha
 }
 
 export function buildGraphChartOptions(points: GraphPoint[], valueSymbol: string): ChartOptions<"line"> {
-    const yAxisBounds = getGraphYAxisBounds(points);
+    const yAxisBounds = getGraphYAxisBounds(points, valueSymbol);
 
     return {
         responsive: true,
@@ -160,7 +177,7 @@ export function buildGraphChartOptions(points: GraphPoint[], valueSymbol: string
                             return "";
                         }
 
-                        return `${parsed.toFixed(1)}${valueSymbol ? ` ${valueSymbol}` : ""}`;
+                        return formatGraphValue(parsed, valueSymbol);
                     }
                 }
             }
@@ -184,7 +201,7 @@ export function buildGraphChartOptions(points: GraphPoint[], valueSymbol: string
                 max: yAxisBounds?.max,
                 ticks: {
                     callback(value) {
-                        return `${Number(value).toFixed(1)}${valueSymbol ? ` ${valueSymbol}` : ""}`;
+                        return formatGraphValue(Number(value), valueSymbol);
                     }
                 },
                 grid: {
