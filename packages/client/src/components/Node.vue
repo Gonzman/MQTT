@@ -81,12 +81,10 @@
 <style scoped>
     .node-card {
         padding: 10px;
-        border-radius: 10px;
     }
 
     .graph-card {
         padding: 20px;
-        border-radius: 16px;
     }
 
     .header {

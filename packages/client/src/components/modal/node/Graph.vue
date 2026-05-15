@@ -1,9 +1,9 @@
 <template>
-    <div class="graph-panel">
-        <div class="graph-header">
-            <div>
-                <div class="graph-title">{{ props.node.name }}</div>
-            </div>
+    <div class="modal-panel graph-panel">
+        <div class="modal-header">
+            <p class="modal-kicker">Overview</p>
+            <p class="modal-title">{{ node.name }}</p>
+            <p class="modal-description">Recent numeric values for this node.</p>
         </div>
 
         <div class="graph-canvas-wrap">
@@ -16,8 +16,12 @@
 
 <script setup lang="ts">
     import { computed, onBeforeUnmount, onMounted, markRaw, ref, shallowRef, watch } from "vue";
-    import { Chart, registerables, type ChartData, type ChartOptions } from "chart.js";
+    import { Chart, registerables } from "chart.js";
     import type { components } from "@/types/schema";
+    import client from "@/lib/client";
+    import { buildGraphChartData, buildGraphChartOptions, getGraphValueSymbol, toGraphPoint, type GraphPoint } from "@/lib/graph";
+
+    const dataLimit = 100;
 
     Chart.register(...registerables);
 
@@ -29,142 +33,48 @@
     const canvasRef = ref<HTMLCanvasElement | null>(null);
     const chartRef = shallowRef<Chart<"line"> | null>(null);
 
-    type PlotPoint = {
-        label: string;
-        value: number;
-    };
+    const plotPoints = ref<GraphPoint[]>([]);
+    let hasHydratedInitialHistory = false;
+    let seenValueIds = new Set<string>();
 
-    const PRE_DATA_PLOT_POINTS: PlotPoint[] = [];
-
-    function extractValueSymbol(value: string) {
-        const match = value.match(/^\s*[-+]?\d*\.?\d+(?:[eE][-+]?\d+)?\s*(.*)$/);
-
-        if (!match || !match[1]) {
-            return "";
+    function addValue(entry: components["schemas"]["ValueDto"]) {
+        if (seenValueIds.has(entry.id)) {
+            return null;
         }
 
-        return match[1].trim();
+        const point = toGraphPoint(entry);
+
+        if (!point) {
+            return null;
+        }
+
+        seenValueIds.add(entry.id);
+        plotPoints.value.push(point);
+
+        while (plotPoints.value.length > dataLimit) {
+            plotPoints.value.shift();
+        }
+
+        return true;
     }
 
-    const valueSymbol = computed(() => {
-        for (const entry of props.data) {
-            if (Number.isFinite(Number.parseFloat(entry.value))) {
-                return extractValueSymbol(entry.value);
+    async function loadInitialPoints() {
+        if (!props.node.topicId) {
+            return;
+        }
+
+        const response = await client.GET("/topics/{topicId}/values", {
+            params: { path: { topicId: props.node.topicId }, query: { limit: dataLimit } }
+        });
+
+        if (response.data?.values) {
+            for (const entry of response.data.values) {
+                addValue(entry);
             }
         }
-
-        return "";
-    });
-
-    function formatValue(value: number) {
-        return value.toFixed(1);
     }
 
-    function getPlotPoints(): PlotPoint[] {
-        const points: PlotPoint[] = [];
-
-        for (const entry of props.data) {
-            const parsed = Number.parseFloat(entry.value);
-
-            if (!Number.isFinite(parsed)) {
-                continue;
-            }
-
-            points.push({
-                label: `${formatLabel(entry.createdAt)}`,
-                value: parsed
-            });
-        }
-
-        return [...PRE_DATA_PLOT_POINTS, ...points.slice(-10)];
-    }
-
-    const hasPlottableValues = computed(() => getPlotPoints().length > 0);
-
-    function formatLabel(value: string) {
-        const date = new Date(value);
-
-        if (Number.isNaN(date.getTime())) {
-            return value;
-        }
-
-        return new Intl.DateTimeFormat(undefined, {
-            hour: "2-digit",
-            minute: "2-digit"
-        }).format(date);
-    }
-
-    function buildChartData(): ChartData<"line"> {
-        const points = getPlotPoints();
-
-        return {
-            labels: points.map((point) => point.label),
-            datasets: [
-                {
-                    label: props.node.name,
-                    data: points.map((point) => point.value),
-                    borderColor: "#2563eb",
-                    backgroundColor: "rgba(37, 99, 235, 0.16)",
-                    pointBackgroundColor: "#ffffff",
-                    pointBorderColor: "#2563eb",
-                    pointRadius: 3,
-                    pointHoverRadius: 5,
-                    tension: 0.35,
-                    fill: true
-                }
-            ]
-        };
-    }
-
-    const chartOptions: ChartOptions<"line"> = {
-        responsive: true,
-        maintainAspectRatio: false,
-        animation: false,
-        interaction: {
-            mode: "index",
-            intersect: false
-        },
-        plugins: {
-            legend: {
-                display: false
-            },
-            tooltip: {
-                callbacks: {
-                    label(context) {
-                        const parsed = context.parsed.y;
-
-                        if (parsed === null) {
-                            return "";
-                        }
-
-                        return `${formatValue(parsed)}${valueSymbol.value ? ` ${valueSymbol.value}` : ""}`;
-                    }
-                }
-            }
-        },
-        scales: {
-            x: {
-                ticks: {
-                    maxRotation: 0,
-                    autoSkip: true
-                },
-                grid: {
-                    color: "rgba(148, 163, 184, 0.12)"
-                }
-            },
-            y: {
-                beginAtZero: false,
-                ticks: {
-                    callback(value) {
-                        return `${formatValue(Number(value))}${valueSymbol.value ? ` ${valueSymbol.value}` : ""}`;
-                    }
-                },
-                grid: {
-                    color: "rgba(148, 163, 184, 0.12)"
-                }
-            }
-        }
-    };
+    const hasPlottableValues = computed(() => plotPoints.value.length > 0);
 
     function syncChart() {
         const canvas = canvasRef.value;
@@ -173,7 +83,8 @@
             return;
         }
 
-        const chartData = buildChartData();
+        const valueSymbol = getGraphValueSymbol(plotPoints.value);
+        const chartData = buildGraphChartData(props.node.name, plotPoints.value);
 
         if (!chartData.labels?.length) {
             chartRef.value?.destroy();
@@ -187,7 +98,7 @@
                 new Chart(canvas, {
                     type: "line",
                     data: chartData,
-                    options: chartOptions
+                    options: buildGraphChartOptions(plotPoints.value, valueSymbol)
                 })
             );
             return;
@@ -195,18 +106,39 @@
 
         chartRef.value.data.labels = chartData.labels;
         chartRef.value.data.datasets = chartData.datasets;
+        chartRef.value.options = buildGraphChartOptions(plotPoints.value, valueSymbol);
         chartRef.value.update("none");
+    }
+
+    function appendLivePoints() {
+        let hasChanges = false;
+
+        for (const entry of props.data) {
+            hasChanges = addValue(entry) || hasChanges;
+        }
+
+        if (hasChanges) {
+            syncChart();
+        }
     }
 
     watch(
         () => props.data.map((entry) => `${entry.id}:${entry.value}:${entry.createdAt}`),
         () => {
-            syncChart();
+            if (!hasHydratedInitialHistory) {
+                return;
+            }
+
+            appendLivePoints();
         },
         { immediate: true, flush: "post" }
     );
 
-    onMounted(() => {
+    onMounted(async () => {
+        await loadInitialPoints();
+        hasHydratedInitialHistory = true;
+
+        appendLivePoints();
         syncChart();
     });
 
