@@ -21,21 +21,16 @@
     import NewCategoryModal from "@/components/modal/category/Modal.vue";
     import client from "@/lib/client";
     import type { components } from "@/types/schema";
-    import { onMounted, ref, type Ref } from "vue";
+    import { onMounted, ref } from "vue";
 
-    const categories: Ref<components["schemas"]["CategoryDto"][]> = ref([]);
-    const health: Ref<string> = ref("Loading");
+    const categories = ref<components["schemas"]["CategoryDto"][]>([]);
+    const health = ref("Loading");
 
     onMounted(async () => {
-        const data = await client.GET("/categories");
-        if (data.data) {
-            categories.value = data.data.categories;
-        }
+        const [categoriesResult, healthResult] = await Promise.all([client.GET("/categories"), client.GET("/health")]);
 
-        const data2 = await client.GET("/health")
-        if (data2) {
-            health.value = data2.data?.status ?? "Bad"
-        }
+        categories.value = categoriesResult.data?.categories ?? [];
+        health.value = healthResult.data?.status ?? "Bad";
     });
 </script>
 

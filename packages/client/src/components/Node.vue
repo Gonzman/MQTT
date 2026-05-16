@@ -1,19 +1,22 @@
 <template>
     <UModal :title="node.name" description="Live readings and graph history." :ui="{ content: 'max-w-7xl' }">
-        <UCard class="surface-card node-card">
-            <!-- Description -->
-            <template #header @click="">
+        <UCard class="surface-card node-card" :class="{ 'is-dragging': isDragging }" draggable="true"
+            @dragstart.stop="startNodeDrag($event, props.node.id, props.node.categoryId, props.node.name, props.node.topicId ? props.node.topicId.slice(0, 8) : undefined)"
+            @dragend="clearDragState" @dragover.stop.prevent="handleDragOver">
+            <template #header>
                 <div class="header">
                     <div class="info">
                         <div class="name">{{ node.name }}</div>
                         <div class="meta" v-if="node.topicId">{{ node.topicId.slice(0, 8) }}</div>
                     </div>
-                    <UTooltip text="Delete Node">
-                        <UButton color="error" @click="deleteNode" aria-label="Delete node" icon="lucide:trash-2" />
-                    </UTooltip>
+                    <div class="actions" @dragstart.stop.prevent>
+                        <UTooltip text="Delete Node">
+                            <UButton color="error" @mousedown.stop @click.stop="deleteNode" aria-label="Delete node"
+                                icon="lucide:trash-2" />
+                        </UTooltip>
+                    </div>
                 </div>
             </template>
-            <!-- Value -->
             <template #default>
                 <div class="value">{{ data[data.length - 1]?.value ?? "No Data" }}</div>
             </template>
@@ -31,8 +34,9 @@
 <script setup lang="ts">
     import client from "@/lib/client";
     import dataManager from "@/lib/dataManager";
+    import { clearDragState, getDragState, getDropBefore, isDraggingNode, moveNodeToCategory, startNodeDrag } from "@/lib/dd";
     import type { components } from "@/types/schema";
-    import { ref, watch, onMounted, onUnmounted } from "vue";
+    import { computed, ref, watch, onMounted, onUnmounted } from "vue";
     import NodeGraph from "./modal/node/Graph.vue";
 
     const data = ref<components["schemas"]["ValueDto"][]>([]);
@@ -43,6 +47,7 @@
     }>();
 
     const model = defineModel<components["schemas"]["NodeDto"][]>({ required: true });
+    const isDragging = computed(() => isDraggingNode(props.node.id));
 
     async function deleteNode() {
         const request = await client.DELETE("/categories/{categoryId}/nodes/{nodeId}", {
@@ -53,7 +58,28 @@
             return;
         }
 
-        model.value = model.value.filter((x) => x.id != props.node.id);
+        model.value = model.value.filter((x) => x.id !== props.node.id);
+    }
+
+    function handleDragOver(event: DragEvent) {
+        const drag = getDragState();
+        const before = getDropBefore(event);
+
+        if (!drag || drag.kind !== "node" || before === null) {
+            return;
+        }
+
+        if (drag.nodeId === props.node.id && drag.categoryId === props.node.categoryId) {
+            return;
+        }
+
+        moveNodeToCategory({
+            nodeId: drag.nodeId,
+            sourceCategoryId: drag.categoryId,
+            targetCategoryId: props.node.categoryId,
+            targetNodeId: props.node.id,
+            before
+        });
     }
 
     onMounted(async () => {
@@ -81,6 +107,18 @@
 <style scoped>
     .node-card {
         padding: 10px;
+        cursor: grab;
+        transition: transform 140ms ease, box-shadow 140ms ease, opacity 140ms ease;
+        user-select: none;
+    }
+
+    .node-card:active {
+        cursor: grabbing;
+    }
+
+    .node-card.is-dragging {
+        opacity: 0.45;
+        transform: scale(0.985);
     }
 
     .graph-card {
@@ -92,6 +130,11 @@
         align-items: center;
         justify-content: space-between;
         gap: 12px;
+    }
+
+    .actions {
+        display: flex;
+        align-items: center;
     }
 
     .info {

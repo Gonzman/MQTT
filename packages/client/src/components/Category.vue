@@ -1,15 +1,18 @@
 <template>
-    <UCard class="surface-card category-card">
+    <UCard class="surface-card category-card" :class="{ 'is-dragging': isDragging }" draggable="true"
+        @dragstart.self="startCategoryDrag($event, category.id, category.name)" @dragend="clearDragState"
+        @dragover.stop.prevent="handleDragOver">
         <div class="category-header">
             <div class="title">
                 <p class="label">{{ category.name }}</p>
                 <div class="meta">{{ nodes.length }} node<span v-if="nodes.length !== 1">s</span></div>
             </div>
 
-            <div class="actions">
+            <div class="actions" @dragstart.stop.prevent>
                 <Modal :category="category.id" v-model="nodes"></Modal>
                 <UTooltip text="Delete Category">
-                    <UButton @click="deleteCategory" aria-label="Delete category" color="error" icon="lucide:trash-2" />
+                    <UButton @mousedown.stop @click.stop="deleteCategory" aria-label="Delete category" color="error"
+                        icon="lucide:trash-2" />
                 </UTooltip>
             </div>
         </div>
@@ -21,28 +24,72 @@
 </template>
 
 <script setup lang="ts">
-    import { onMounted, ref, type Ref } from "vue";
+    import { computed, onMounted, onUnmounted, ref } from "vue";
     import Node from "./Node.vue";
     import type { components } from "@/types/schema";
     import client from "@/lib/client";
     import Modal from "./modal/node/Modal.vue";
+    import {
+        clearDragState,
+        getDragState,
+        getDropBefore,
+        isDraggingCategory,
+        moveCategory,
+        moveNodeToCategory,
+        registerNodeCollection,
+        startCategoryDrag,
+        unregisterNodeCollection
+    } from "@/lib/dd";
 
-    let props = defineProps<{
+    const props = defineProps<{
         category: components["schemas"]["CategoryDto"];
     }>();
 
-    let model = defineModel<components["schemas"]["CategoryDto"][]>({ required: true });
+    const model = defineModel<components["schemas"]["CategoryDto"][]>({ required: true });
 
-    const nodes: Ref<components["schemas"]["NodeDto"][]> = ref([]);
+    const nodes = ref<components["schemas"]["NodeDto"][]>([]);
+    const isDragging = computed(() => isDraggingCategory(props.category.id));
 
     onMounted(async () => {
+        registerNodeCollection(props.category.id, nodes);
+
         const request = await client.GET("/categories/{categoryId}/nodes", {
             params: { path: { categoryId: props.category.id } }
         });
-        if (request.data) {
-            nodes.value = request.data.nodes;
-        }
+        nodes.value = request.data?.nodes ?? [];
     });
+
+    onUnmounted(() => {
+        unregisterNodeCollection(props.category.id, nodes);
+    });
+
+    function handleDragOver(event: DragEvent) {
+        const drag = getDragState();
+        const before = getDropBefore(event);
+
+        if (!drag || before === null) {
+            return;
+        }
+
+        if (drag.kind === "category") {
+            if (drag.categoryId === props.category.id) {
+                return;
+            }
+
+            moveCategory(model.value, drag.categoryId, props.category.id, before);
+            return;
+        }
+
+        if (drag.categoryId === props.category.id) {
+            return;
+        }
+
+        moveNodeToCategory({
+            nodeId: drag.nodeId,
+            sourceCategoryId: drag.categoryId,
+            targetCategoryId: props.category.id
+        });
+    }
 
     async function deleteCategory() {
         const request = await client.DELETE("/categories/{categoryId}", {
@@ -60,6 +107,18 @@
     .category-card {
         padding: 12px;
         border-radius: 10px;
+        cursor: grab;
+        transition: transform 140ms ease, box-shadow 140ms ease, opacity 140ms ease;
+        user-select: none;
+    }
+
+    .category-card:active {
+        cursor: grabbing;
+    }
+
+    .category-card.is-dragging {
+        opacity: 0.45;
+        transform: scale(0.985);
     }
 
     .category-header {
@@ -108,6 +167,5 @@
         .meta {
             color: #9aa3ad;
         }
-
     }
 </style>
