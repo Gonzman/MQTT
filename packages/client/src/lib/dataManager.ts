@@ -21,13 +21,13 @@ interface ValueDeletedEvent {
 interface NodeMovedEvent {
     event: "NODE_MOVED";
     data: {
-        categoryId: "00000000-0000-0000-0000-000000000000";
-        id: "00000000-0000-0000-0000-000000000000";
-        newCategoryId: "00000000-0000-0000-0000-000000000000";
+        categoryId: string;
+        id: string;
+        newCategoryId: string;
     };
 }
 
-type wsData = ValueCreatedEvent | ValueDeletedEvent;
+type wsData = ValueCreatedEvent | ValueDeletedEvent | NodeMovedEvent;
 
 class DataManager {
     private static instance: DataManager;
