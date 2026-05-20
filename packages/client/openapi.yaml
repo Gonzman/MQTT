@@ -1,10 +1,10 @@
 openapi: 3.1.0
 info:
   title: MQTT API
-  description: ''
+  description: ""
   license:
-    name: ''
-  version: '1.0'
+    name: ""
+  version: "1.0"
 servers:
   - url: https://api.mqtt.tobi.tintuc.de
     description: Production server
@@ -15,7 +15,7 @@ paths:
         - Categories
       operationId: get_categories
       responses:
-        '200':
+        "200":
           description: Returns a list of categories
           content:
             application/json:
@@ -28,7 +28,7 @@ paths:
                   categories:
                     type: array
                     items:
-                      $ref: '#/components/schemas/CategoryDto'
+                      $ref: "#/components/schemas/CategoryDto"
     post:
       tags:
         - Categories
@@ -46,7 +46,7 @@ paths:
                   type: string
         required: true
       responses:
-        '201':
+        "201":
           description: Creates a new category and returns it
           content:
             application/json:
@@ -76,7 +76,7 @@ paths:
             type: string
             format: uuid
       responses:
-        '200':
+        "200":
           description: Returns the category
           content:
             application/json:
@@ -105,7 +105,7 @@ paths:
             type: string
             format: uuid
       responses:
-        '204':
+        "204":
           description: Deletes the category
     patch:
       tags:
@@ -129,11 +129,11 @@ paths:
                 name:
                   type:
                     - string
-                    - 'null'
+                    - "null"
               maxProperties: 1
         required: true
       responses:
-        '200':
+        "200":
           description: Modifies the category and returns it
           content:
             application/json:
@@ -163,7 +163,7 @@ paths:
             type: string
             format: uuid
       responses:
-        '200':
+        "200":
           description: Returns a list of nodes in a category
           content:
             application/json:
@@ -176,7 +176,7 @@ paths:
                   nodes:
                     type: array
                     items:
-                      $ref: '#/components/schemas/NodeDto'
+                      $ref: "#/components/schemas/NodeDto"
     post:
       tags:
         - Nodes
@@ -206,7 +206,7 @@ paths:
                   format: uuid
         required: true
       responses:
-        '201':
+        "201":
           description: Creates a new node and returns it
           content:
             application/json:
@@ -251,8 +251,65 @@ paths:
             type: string
             format: uuid
       responses:
-        '200':
+        "200":
           description: Returns the node
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Node
+                required:
+                  - categoryId
+                  - id
+                  - name
+                  - topicId
+                properties:
+                  categoryId:
+                    type: string
+                    format: uuid
+                  id:
+                    type: string
+                    format: uuid
+                  name:
+                    type: string
+                  topicId:
+                    type: string
+                    format: uuid
+    put:
+      tags:
+        - Nodes
+      operationId: put_node
+      parameters:
+        - name: categoryId
+          in: path
+          description: Category id
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: nodeId
+          in: path
+          description: Node id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              title: MoveNode
+              required:
+                - categoryId
+              properties:
+                categoryId:
+                  type: string
+                  format: uuid
+        required: true
+      responses:
+        "200":
+          description: Moves the node to a new category and returns it
           content:
             application/json:
               schema:
@@ -295,7 +352,7 @@ paths:
             type: string
             format: uuid
       responses:
-        '204':
+        "204":
           description: Deletes the node
     patch:
       tags:
@@ -326,16 +383,16 @@ paths:
                 name:
                   type:
                     - string
-                    - 'null'
+                    - "null"
                 topicId:
                   type:
                     - string
-                    - 'null'
+                    - "null"
                   format: uuid
               maxProperties: 1
         required: true
       responses:
-        '200':
+        "200":
           description: Modifies the node and returns it
           content:
             application/json:
@@ -365,7 +422,7 @@ paths:
         - Health
       operationId: get_health
       responses:
-        '200':
+        "200":
           description: Returns the health of the service
           content:
             application/json:
@@ -383,7 +440,7 @@ paths:
         - MQTT
       operationId: get_status
       responses:
-        '200':
+        "200":
           description: Returns the status of the MQTT connection
           content:
             application/json:
@@ -401,7 +458,7 @@ paths:
         - Topics
       operationId: get_topics
       responses:
-        '200':
+        "200":
           description: Returns a list of topics
           content:
             application/json:
@@ -414,7 +471,7 @@ paths:
                   topics:
                     type: array
                     items:
-                      $ref: '#/components/schemas/TopicDto'
+                      $ref: "#/components/schemas/TopicDto"
     post:
       tags:
         - Topics
@@ -433,10 +490,10 @@ paths:
                 name:
                   type:
                     - string
-                    - 'null'
+                    - "null"
         required: true
       responses:
-        '201':
+        "201":
           description: Creates a new topic and returns it
           content:
             application/json:
@@ -455,7 +512,7 @@ paths:
                   name:
                     type:
                       - string
-                      - 'null'
+                      - "null"
   /topics/{topicId}:
     get:
       tags:
@@ -470,7 +527,7 @@ paths:
             type: string
             format: uuid
       responses:
-        '200':
+        "200":
           description: Returns the topic
           content:
             application/json:
@@ -489,7 +546,7 @@ paths:
                   name:
                     type:
                       - string
-                      - 'null'
+                      - "null"
     delete:
       tags:
         - Topics
@@ -503,7 +560,7 @@ paths:
             type: string
             format: uuid
       responses:
-        '204':
+        "204":
           description: Deletes the topic
     patch:
       tags:
@@ -531,15 +588,15 @@ paths:
                 mqttTopic:
                   type:
                     - string
-                    - 'null'
+                    - "null"
                 name:
                   type:
                     - string
-                    - 'null'
+                    - "null"
               maxProperties: 1
         required: true
       responses:
-        '200':
+        "200":
           description: Modifies the topic and returns it
           content:
             application/json:
@@ -558,7 +615,7 @@ paths:
                   name:
                     type:
                       - string
-                      - 'null'
+                      - "null"
   /topics/{topicId}/values:
     get:
       tags:
@@ -575,8 +632,7 @@ paths:
         - name: limit
           in: query
           description: Limit of values to return. Minimum = 1, Maximum = 500 and Default =
-            100. If neither before nor after are provided, the latest values are
-            returned.
+            100.
           required: false
           schema:
             type: integer
@@ -584,8 +640,9 @@ paths:
             minimum: 0
         - name: before
           in: query
-          description: Get values before this value. If both before and after are
-            provided, before takes precedence.
+          description: Get values before this value. If neither before nor after are
+            provided, the latest values are returned. If both before and after
+            are provided, before takes precedence.
           required: false
           schema:
             type: string
@@ -598,7 +655,7 @@ paths:
             type: string
             format: uuid
       responses:
-        '200':
+        "200":
           description: Returns a list of values in a topic
           content:
             application/json:
@@ -611,7 +668,7 @@ paths:
                   values:
                     type: array
                     items:
-                      $ref: '#/components/schemas/ValueDto'
+                      $ref: "#/components/schemas/ValueDto"
   /topics/{topicId}/values/{valueId}:
     get:
       tags:
@@ -633,7 +690,7 @@ paths:
             type: string
             format: uuid
       responses:
-        '200':
+        "200":
           description: Returns the value
           content:
             application/json:
@@ -663,7 +720,7 @@ paths:
         - WebSocket
       operationId: get_ws
       responses:
-        '101':
+        "101":
           description: Upgrade to a WebSocket connection
 components:
   schemas:
@@ -676,7 +733,7 @@ components:
         categories:
           type: array
           items:
-            $ref: '#/components/schemas/CategoryDto'
+            $ref: "#/components/schemas/CategoryDto"
     CategoryDto:
       type: object
       title: Category
@@ -720,7 +777,7 @@ components:
         name:
           type:
             - string
-            - 'null'
+            - "null"
     HealthDto:
       type: object
       title: Health
@@ -736,7 +793,7 @@ components:
         name:
           type:
             - string
-            - 'null'
+            - "null"
       maxProperties: 1
     ModifyNodeDto:
       type: object
@@ -745,11 +802,11 @@ components:
         name:
           type:
             - string
-            - 'null'
+            - "null"
         topicId:
           type:
             - string
-            - 'null'
+            - "null"
           format: uuid
       maxProperties: 1
     ModifyTopicDto:
@@ -763,11 +820,11 @@ components:
         mqttTopic:
           type:
             - string
-            - 'null'
+            - "null"
         name:
           type:
             - string
-            - 'null'
+            - "null"
       maxProperties: 1
     MqttStatusDto:
       type: object
@@ -806,7 +863,7 @@ components:
         nodes:
           type: array
           items:
-            $ref: '#/components/schemas/NodeDto'
+            $ref: "#/components/schemas/NodeDto"
     TopicDto:
       type: object
       title: Topic
@@ -822,7 +879,7 @@ components:
         name:
           type:
             - string
-            - 'null'
+            - "null"
     TopicsDto:
       type: object
       title: Topics
@@ -832,7 +889,7 @@ components:
         topics:
           type: array
           items:
-            $ref: '#/components/schemas/TopicDto'
+            $ref: "#/components/schemas/TopicDto"
     ValueDto:
       type: object
       title: Value
@@ -862,7 +919,7 @@ components:
         values:
           type: array
           items:
-            $ref: '#/components/schemas/ValueDto'
+            $ref: "#/components/schemas/ValueDto"
 tags:
   - name: Health
     description: Health API

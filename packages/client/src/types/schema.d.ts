@@ -60,7 +60,7 @@ export interface paths {
             cookie?: never;
         };
         get: operations["get_node"];
-        put?: never;
+        put: operations["put_node"];
         post?: never;
         delete: operations["delete_node"];
         options?: never;
@@ -513,6 +513,46 @@ export interface operations {
             };
         };
     };
+    put_node: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Category id */
+                categoryId: string;
+                /** @description Node id */
+                nodeId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** Format: uuid */
+                    categoryId: string;
+                };
+            };
+        };
+        responses: {
+            /** @description Moves the node to a new category and returns it */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** Format: uuid */
+                        categoryId: string;
+                        /** Format: uuid */
+                        id: string;
+                        name: string;
+                        /** Format: uuid */
+                        topicId: string;
+                    };
+                };
+            };
+        };
+    };
     delete_node: {
         parameters: {
             query?: never;
@@ -762,9 +802,9 @@ export interface operations {
     get_values: {
         parameters: {
             query?: {
-                /** @description Limit of values to return. Minimum = 1, Maximum = 500 and Default = 100. If neither before nor after are provided, the latest values are returned. */
+                /** @description Limit of values to return. Minimum = 1, Maximum = 500 and Default = 100. */
                 limit?: number;
-                /** @description Get values before this value. If both before and after are provided, before takes precedence. */
+                /** @description Get values before this value. If neither before nor after are provided, the latest values are returned. If both before and after are provided, before takes precedence. */
                 before?: string;
                 /** @description Get values after this value. */
                 after?: string;
