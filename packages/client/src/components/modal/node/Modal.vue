@@ -1,16 +1,16 @@
 <script setup lang="ts">
-    import type { components } from "@/types/schema";
-    import Fields from "./Fields.vue";
-    import { ref } from "vue";
+import type { components } from "@/types/schema";
+import Fields from "./Fields.vue";
+import { ref } from "vue";
 
-    const props = defineProps<{ category: string }>();
+const props = defineProps<{ category: string }>();
 
-    let model = defineModel<components["schemas"]["NodeDto"][]>({ required: true });
-    const open = ref(false);
+let model = defineModel<components["schemas"]["NodeDto"][]>({ required: true });
+const open = ref(false);
 
-    function close() {
-        open.value = false;
-    }
+function close() {
+    open.value = false;
+}
 </script>
 
 <template>

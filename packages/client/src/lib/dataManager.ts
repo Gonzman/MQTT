@@ -18,6 +18,15 @@ interface ValueDeletedEvent {
     };
 }
 
+interface NodeMovedEvent {
+    event: "NODE_MOVED";
+    data: {
+        categoryId: "00000000-0000-0000-0000-000000000000";
+        id: "00000000-0000-0000-0000-000000000000";
+        newCategoryId: "00000000-0000-0000-0000-000000000000";
+    };
+}
+
 type wsData = ValueCreatedEvent | ValueDeletedEvent;
 
 class DataManager {
