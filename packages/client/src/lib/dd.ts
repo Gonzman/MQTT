@@ -1,6 +1,7 @@
 import { shallowRef, type Ref } from "vue";
 
 import type { components } from "@/types/schema";
+import client from "./client";
 
 type CategoryDto = components["schemas"]["CategoryDto"];
 type NodeDto = components["schemas"]["NodeDto"];
@@ -251,6 +252,8 @@ export function moveNodeToCategory(options: {
     }
 
     targetNodes.value.splice(insertIndex, 0, node);
+
+    //TODO: PUT Node in neue Categorie für Server Sync
 
     syncDraggedNodeCategory(options.nodeId, options.targetCategoryId);
 

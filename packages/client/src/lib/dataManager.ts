@@ -28,6 +28,9 @@ class DataManager {
 
     private ws: WebSocket;
 
+    /**
+     * Es wird die Verbindung zum WebSocket Server aufgebaut und die Events werden verarbeitet
+     */
     private constructor() {
         this.ws = new WebSocket(`wss://${url}/ws`);
 
@@ -57,6 +60,9 @@ class DataManager {
         });
     }
 
+    /**
+     * Die neuen Daten vom Event werden genommen die dann im richtigen Array hinzugefügt werden.
+     */
     private handleValueCreated(payload: ValueCreatedEvent) {
         const values = this.data[payload.data.topicId];
 
@@ -76,6 +82,9 @@ class DataManager {
         });
     }
 
+    /**
+     * Es wird das Daten vom richtigen Array gelöscht
+     */
     private handleValueDeleted(payload: ValueDeletedEvent) {
         const values = this.data[payload.data.topicId];
 
@@ -86,6 +95,10 @@ class DataManager {
         values.value = values.value.filter((x) => x.id !== payload.data.id);
     }
 
+    /**
+     * Wenn die Daten schon gespeichert sind oder gerade in Bearbeitung sind werden die Daten zurückgegeben.
+     * Wenn es in keinem von beiden ist, werden die Daten vom Server angefragt und zurückgegeben.
+     */
     public async listenForData(id: string) {
         if (this.data[id]) {
             return this.data[id];
