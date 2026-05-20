@@ -36,17 +36,41 @@ const open = ref(false);
 
 const name = ref("");
 
+const toast = useToast()
+
 onMounted(() => {
     name.value = props.node.name;
 });
 
 function update() {
+    if (!name.value.trim()) {
+        toast.add({
+            title: 'Error',
+            description: `Name cannot be empty.`,
+            color: "error",
+            icon: 'i-lucide-ban'
+        })
+
+        return;
+    }
+
     client
         .PATCH("/categories/{categoryId}/nodes/{nodeId}", {
             params: { path: { categoryId: props.node.categoryId, nodeId: props.node.id } },
             body: { name: name.value }
         })
-        .then(() => {
+        .then((response: any) => {
+            if (response?.error) {
+                toast.add({
+                    title: response.error.message,
+                    description: response?.error?.details ?? `${response?.error?.details}`,
+                    color: "error",
+                    icon: 'i-lucide-ban'
+                })
+
+                return;
+            }
+
             let update = model.value.find((x) => x.id == props.node.id);
             if (!update) {
                 return;

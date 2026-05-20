@@ -27,6 +27,8 @@ const props = defineProps<{ category: components["schemas"]["CategoryDto"] }>();
 const model = defineModel<components["schemas"]["CategoryDto"][]>({ required: true });
 const open = ref(false);
 
+const toast = useToast()
+
 const name = ref("");
 
 onMounted(() => {
@@ -34,19 +36,41 @@ onMounted(() => {
 });
 
 function update() {
+    // if (!name.value.trim()) {
+    //     toast.add({
+    //         title: 'Error',
+    //         description: `Name cannot be empty.`,
+    //         color: "error",
+    //         icon: 'i-lucide-ban'
+    //     })
+
+    //     return;
+    // }
+
     client
         .PATCH("/categories/{categoryId}", {
             params: { path: { categoryId: props.category.id } },
             body: { name: name.value }
         })
-        .then(() => {
+        .then((response: any) => {
+            if (response?.error) {
+                toast.add({
+                    title: response.error.message,
+                    description: response?.error?.details ?? `${response?.error?.details}`,
+                    color: "error",
+                    icon: 'i-lucide-ban'
+                })
+
+                return;
+            }
+            
             let update = model.value.find((x) => x.id == props.category.id);
             if (!update) {
                 return;
             }
             update.name = name.value;
             close();
-        });
+        })
 }
 
 function close() {
