@@ -10,6 +10,7 @@
 
             <div class="actions" @dragstart.stop.prevent>
                 <Modal :category="category.id" v-model="nodes"></Modal>
+                <Rename :category="category" v-model="model" @mousedown.stop></Rename>
                 <UTooltip text="Delete Category">
                     <UButton @mousedown.stop @click.stop="deleteCategory" aria-label="Delete category" color="error"
                         icon="lucide:trash-2" />
@@ -28,7 +29,7 @@
     import Node from "./Node.vue";
     import type { components } from "@/types/schema";
     import client from "@/lib/client";
-    import Modal from "./modal/node/Modal.vue";
+    import Modal from "./modal/node/modal.vue";
     import {
         clearDragState,
         getDragState,
@@ -40,6 +41,8 @@
         startCategoryDrag,
         unregisterNodeCollection
     } from "@/lib/dd";
+
+    import Rename from "./modal/category/rename.vue";
 
     const props = defineProps<{
         category: components["schemas"]["CategoryDto"];
