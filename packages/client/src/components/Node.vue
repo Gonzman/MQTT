@@ -143,7 +143,7 @@
 
 <style scoped>
     .node-card {
-        padding: 10px;
+        padding: 5px;
         cursor: grab;
         transition:
             transform 140ms ease,
@@ -162,21 +162,19 @@
     }
 
     .graph-card {
-        padding: 20px;
+        padding: 16px;
     }
 
     .header {
         display: flex;
         align-items: center;
-        justify-content: space-between;
-        gap: 12px;
     }
 
     .actions {
         display: flex;
-        gap: 8px;
-        align-items: center;
-        justify-content: space-between;
+        gap: 2px;
+        align-items: end;
+        margin-left: auto;
         flex-shrink: 0;
     }
 
@@ -203,7 +201,7 @@
     }
 
     .value {
-        margin-top: 8px;
+        margin-top: 6px;
         font-size: 1rem;
         color: #374151;
         opacity: 0.95;

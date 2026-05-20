@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import type { components } from "@/types/schema";
-import Fields from "./Fields.vue";
-import { ref } from "vue";
+    import type { components } from "@/types/schema";
+    import Fields from "./Fields.vue";
+    import { ref } from "vue";
 
-let model = defineModel<components["schemas"]["CategoryDto"][]>({ required: true });
-const open = ref(false);
+    let model = defineModel<components["schemas"]["CategoryDto"][]>({ required: true });
+    const open = ref(false);
 
-function close() {
-    open.value = false;
-}
+    function close() {
+        open.value = false;
+    }
 </script>
 
 <template>

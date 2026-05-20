@@ -13,8 +13,8 @@
                 <Rename label="Category" title="Rename the Category" description="Change the category name."
                     tooltip="Rename Category" :name="category.name" :onUpdate="updateCategory" />
                 <UTooltip text="Delete Category">
-                    <UButton @mousedown.stop @click.stop="deleteCategory" aria-label="Delete category" color="error"
-                        icon="lucide:trash-2" />
+                    <UButton @mousedown.stop @click.stop="deleteCategory" variant="ghost" aria-label="Delete category"
+                        color="error" icon="lucide:trash-2" />
                 </UTooltip>
             </div>
         </div>
