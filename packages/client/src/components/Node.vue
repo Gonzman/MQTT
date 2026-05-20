@@ -41,7 +41,7 @@ import { clearDragState, getDragState, getDropBefore, isDraggingNode, moveNodeTo
 import type { components } from "@/types/schema";
 import { computed, ref, watch, onMounted, onUnmounted } from "vue";
 import NodeGraph from "./modal/node/Graph.vue";
-import Rename from "./modal/node/rename.vue";
+import Rename from "./modal/node/Rename.vue";
 
 const data = ref<components["schemas"]["ValueDto"][]>([]);
 let stopSync: (() => void) | null = null;

@@ -29,7 +29,7 @@
     import Node from "./Node.vue";
     import type { components } from "@/types/schema";
     import client from "@/lib/client";
-    import Modal from "./modal/node/modal.vue";
+    import Modal from "./modal/node/Modal.vue";
     import {
         clearDragState,
         getDragState,
@@ -42,7 +42,7 @@
         unregisterNodeCollection
     } from "@/lib/dd";
 
-    import Rename from "./modal/category/rename.vue";
+    import Rename from "./modal/category/Rename.vue";
 
     const props = defineProps<{
         category: components["schemas"]["CategoryDto"];
