@@ -1,9 +1,11 @@
 <template>
-    <UInput class="modal-field" placeholder="Name" v-model="name" />
+    <form>
+        <UInput class="modal-field w-full p-4" placeholder="Name" v-model="name" />
 
-    <div class="modal-actions">
-        <UButton color="success" @click="createCategory">Create Category</UButton>
-    </div>
+        <div class="modal-actions pr-4">
+            <UButton color="success" @click="createCategory" onkeypress="enter" class="pt-4">Create Category</UButton>
+        </div>
+    </form>
 </template>
 <script setup lang="ts">
 import client from "@/lib/client";

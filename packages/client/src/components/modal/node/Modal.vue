@@ -21,14 +21,14 @@ function close() {
 
         <template #content>
             <div class="modal-panel">
-                <div class="modal-header">
+                <div class="modal-header p-4">
                     <p class="modal-kicker">Node</p>
                     <p class="modal-title">Create a new node</p>
                     <p class="modal-description">Set a name and pick or create a topic.</p>
                 </div>
 
                 <div class="modal-form">
-                    <Fields :category="props.category" v-model="model" @close="close" />
+                    <Fields :category="props.category" v-model="model" @close="close" class="px-4" />
                 </div>
             </div>
         </template>

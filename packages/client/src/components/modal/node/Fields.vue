@@ -1,36 +1,40 @@
 <template>
-    <UInput class="modal-field" placeholder="Name" v-model="name" />
-    <USelectMenu
-        v-model="selected"
-        v-model:search-term="search"
-        :items="topics"
-        label-key="mqttTopic"
-        search-input
-        create-item
-        @create="handleCreate"
-        placeholder="Select or create MQTT topic"
-        class="modal-field"
-    >
-        <template #item="{ item }">
-            <div class="topic-option">
-                <span class="topic-option__label">{{ item.mqttTopic }}</span>
+    <form>
+        <UInput class="modal-field w-full" placeholder="Name" v-model="name" /><br />
+        <div class="pt-4">
+            <USelectMenu
+                v-model="selected"
+                v-model:search-term="search"
+                :items="topics"
+                label-key="mqttTopic"
+                search-input
+                create-item
+                @create="handleCreate"
+                placeholder="Select or create MQTT topic"
+                class="modal-field w-full"
+            >
+                <template #item="{ item }">
+                    <div class="topic-option">
+                        <span class="topic-option__label">{{ item.mqttTopic }}</span>
 
-                <UButton
-                    class="topic-option__delete"
-                    variant="ghost"
-                    color="neutral"
-                    size="xs"
-                    icon="lucide:trash-2"
-                    aria-label="Delete topic"
-                    @mousedown.stop.prevent
-                    @click.stop="deleteTopic(item)"
-                />
-            </div>
-        </template>
-    </USelectMenu>
-    <div class="modal-actions">
-        <UButton color="success" @click="createNode">Create Node</UButton>
-    </div>
+                        <UButton
+                            class="topic-option__delete"
+                            variant="ghost"
+                            color="neutral"
+                            size="xs"
+                            icon="lucide:trash-2"
+                            aria-label="Delete topic"
+                            @mousedown.stop.prevent
+                            @click.stop="deleteTopic(item)"
+                        />
+                    </div>
+                </template>
+            </USelectMenu>
+        </div>
+        <div class="modal-actions">
+            <UButton color="success" @click="createNode" type="submit">Create Node</UButton>
+        </div>
+    </form>
 </template>
 <script setup lang="ts">
 import client from "@/lib/client";
