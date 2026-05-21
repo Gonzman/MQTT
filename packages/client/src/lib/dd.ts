@@ -238,7 +238,10 @@ export function moveNodeToCategory(options: {
     if (!node) {
         return false;
     }
-    client.PUT("/categories/{categoryId}/nodes/{nodeId}", {params:{path:{categoryId: node.categoryId, nodeId: node.id}}, body:{categoryId: options.targetCategoryId}})
+    client.PUT("/categories/{categoryId}/nodes/{nodeId}", {
+        params: { path: { categoryId: node.categoryId, nodeId: node.id } },
+        body: { categoryId: options.targetCategoryId }
+    });
 
     node.categoryId = options.targetCategoryId;
 
@@ -255,7 +258,6 @@ export function moveNodeToCategory(options: {
     targetNodes.value.splice(insertIndex, 0, node);
 
     //TODO: PUT Node in neue Categorie für Server Sync
-
 
     syncDraggedNodeCategory(options.nodeId, options.targetCategoryId);
 

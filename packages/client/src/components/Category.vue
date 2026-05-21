@@ -10,10 +10,11 @@
 
             <div class="actions" @dragstart.stop.prevent>
                 <Modal :category="category.id" v-model="nodes"></Modal>
-                <Rename :category="category" v-model="model" @mousedown.stop></Rename>
+                <Rename label="Category" title="Rename the Category" description="Change the category name."
+                    tooltip="Rename Category" :name="category.name" :onUpdate="updateCategory" />
                 <UTooltip text="Delete Category">
-                    <UButton @mousedown.stop @click.stop="deleteCategory" aria-label="Delete category" color="error"
-                        icon="lucide:trash-2" />
+                    <UButton @mousedown.stop @click.stop="deleteCategory" variant="ghost" aria-label="Delete category"
+                        color="error" icon="lucide:trash-2" />
                 </UTooltip>
             </div>
         </div>
@@ -42,7 +43,7 @@ import {
     unregisterNodeCollection
 } from "@/lib/dd";
 
-import Rename from "./modal/category/Rename.vue";
+import Rename from "./modal/Rename.vue";
 import dataManager from "@/lib/dataManager";
 
 const props = defineProps<{
@@ -93,6 +94,25 @@ function handleDragOver(event: DragEvent) {
         sourceCategoryId: drag.categoryId,
         targetCategoryId: props.category.id
     });
+}
+
+async function updateCategory(name: string) {
+    const request = await client.PATCH("/categories/{categoryId}", {
+        params: { path: { categoryId: props.category.id } },
+        body: { name }
+    });
+
+    if (!request.response.ok) {
+        return false;
+    }
+
+    const update = model.value.find((x) => x.id === props.category.id);
+
+    if (update) {
+        update.name = name;
+    }
+
+    return true;
 }
 
 async function deleteCategory() {

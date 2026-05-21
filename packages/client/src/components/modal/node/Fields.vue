@@ -2,31 +2,16 @@
     <form>
         <UInput class="modal-field w-full" placeholder="Name" v-model="name" /><br />
         <div class="pt-4">
-            <USelectMenu
-                v-model="selected"
-                v-model:search-term="search"
-                :items="topics"
-                label-key="mqttTopic"
-                search-input
-                create-item
-                @create="handleCreate"
-                placeholder="Select or create MQTT topic"
-                class="modal-field w-full"
-            >
+            <USelectMenu v-model="selected" v-model:search-term="search" :items="topics" label-key="mqttTopic"
+                search-input create-item @create="handleCreate" placeholder="Select or create MQTT topic"
+                class="modal-field w-full">
                 <template #item="{ item }">
                     <div class="topic-option">
                         <span class="topic-option__label">{{ item.mqttTopic }}</span>
 
-                        <UButton
-                            class="topic-option__delete"
-                            variant="ghost"
-                            color="neutral"
-                            size="xs"
-                            icon="lucide:trash-2"
-                            aria-label="Delete topic"
-                            @mousedown.stop.prevent
-                            @click.stop="deleteTopic(item)"
-                        />
+                        <UButton class="topic-option__delete" variant="ghost" color="neutral" size="xs"
+                            icon="lucide:trash-2" aria-label="Delete topic" @mousedown.stop.prevent
+                            @click.stop="deleteTopic(item)" />
                     </div>
                 </template>
             </USelectMenu>
