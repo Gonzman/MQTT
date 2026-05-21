@@ -97,13 +97,54 @@ function setDragImage(event: DragEvent, kind: "category" | "node", title: string
         return;
     }
 
-    const preview = createDragPreview(kind, title, subtitle);
+    const previewCanvas = createDragPreview(kind, title, subtitle);
     const rect = element.getBoundingClientRect();
+
+    // Some browsers (notably Safari) require the element passed to
+    // `setDragImage` to be connected to the document. Creating an
+    // offscreen `img` from the canvas is more compatible, otherwise
+    // append the canvas temporarily.
+    let previewElement: Element = previewCanvas;
+    let appended = false;
+
+    if (!previewCanvas.isConnected) {
+        try {
+            const img = new Image();
+            img.src = previewCanvas.toDataURL();
+            img.style.position = "absolute";
+            img.style.left = "-9999px";
+            img.style.top = "-9999px";
+            img.style.pointerEvents = "none";
+            img.style.opacity = "0";
+            document.body.appendChild(img);
+            previewElement = img;
+            appended = true;
+        } catch {
+            previewCanvas.style.position = "absolute";
+            previewCanvas.style.left = "-9999px";
+            previewCanvas.style.top = "-9999px";
+            previewCanvas.style.pointerEvents = "none";
+            previewCanvas.style.opacity = "0";
+            document.body.appendChild(previewCanvas);
+            previewElement = previewCanvas;
+            appended = true;
+        }
+    }
+
     event.dataTransfer.setDragImage(
-        preview,
+        previewElement,
         Math.max(12, event.clientX - rect.left),
         Math.max(12, event.clientY - rect.top)
     );
+
+    if (appended) {
+        // Allow the browser to snapshot the element, then remove it.
+        setTimeout(() => {
+            if (previewElement.parentNode) {
+                previewElement.parentNode.removeChild(previewElement);
+            }
+        }, 0);
+    }
 }
 
 function reorderWithinArray<T extends { id: string }>(items: T[], itemId: string, targetId: string, before: boolean) {
