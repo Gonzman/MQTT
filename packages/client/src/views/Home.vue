@@ -20,16 +20,16 @@
 import Category from "@/components/Category.vue";
 import NewCategoryModal from "@/components/modal/category/Modal.vue";
 import client from "@/lib/client";
+import dataManager from "@/lib/dataManager";
 import type { components } from "@/types/schema";
-import { onMounted, ref } from "vue";
+import { onMounted, ref, type Ref } from "vue";
 
-const categories = ref<components["schemas"]["CategoryDto"][]>([]);
+const categories: Ref<components["schemas"]["CategoryDto"][]> = dataManager.categories;
 const health = ref("Loading");
 
 onMounted(async () => {
-    const [categoriesResult, healthResult] = await Promise.all([client.GET("/categories"), client.GET("/health")]);
+    const [healthResult] = await Promise.all([client.GET("/health")]);
 
-    categories.value = categoriesResult.data?.categories ?? [];
     health.value = healthResult.data?.status ?? "Bad";
 });
 </script>

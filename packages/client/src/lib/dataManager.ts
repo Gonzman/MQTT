@@ -2,6 +2,7 @@ import { ref } from "vue";
 import type { Ref } from "vue";
 import client, { url } from "./client";
 import type { components } from "@/types/schema";
+import { th } from "@nuxt/ui/runtime/locale/index.js";
 
 type ValueDto = components["schemas"]["ValueDto"];
 
@@ -37,6 +38,10 @@ class DataManager {
 
     private ws: WebSocket;
 
+    private _categories: Ref<components["schemas"]["CategoryDto"][]> = ref([]);
+    private _nodes: Record<string, Ref<components["schemas"]["NodeDto"][]>> = {};
+    private _status: Ref<string> = ref("Error");
+
     /**
      * Es wird die Verbindung zum WebSocket Server aufgebaut und die Events werden verarbeitet
      */
@@ -65,6 +70,25 @@ class DataManager {
 
             if (payload.event === "VALUE_DELETED") {
                 this.handleValueDeleted(payload);
+            }
+        });
+
+        client.GET("/categories").then((data) => {
+            if (!data.data) {
+                this._status.value = "Bad";
+                return;
+            }
+            this._categories.value = data.data.categories;
+
+            for (const categorie of this._categories.value) {
+                this._nodes[categorie.id] = ref([]);
+
+                client
+                    .GET("/categories/{categoryId}/nodes", { params: { path: { categoryId: categorie.id } } })
+                    .then((nodeData) => {
+                        if (!nodeData.data) return;
+                        this._nodes[categorie.id]!.value = nodeData.data.nodes;
+                    });
             }
         });
     }
@@ -143,6 +167,25 @@ class DataManager {
             DataManager.instance = new DataManager();
         }
         return DataManager.instance;
+    }
+
+    get categories() {
+        return this._categories;
+    }
+
+    public getNodes(categorieId: string) {
+        if (!this._nodes[categorieId]) {
+            this._nodes[categorieId] = ref<components["schemas"]["NodeDto"][]>([]);
+
+            client
+                .GET("/categories/{categoryId}/nodes", { params: { path: { categoryId: categorieId } } })
+                .then((nodeData) => {
+                    if (!nodeData.data) return;
+                    this._nodes[categorieId]!.value = nodeData.data.nodes;
+                });
+        }
+
+        return this._nodes[categorieId];
     }
 }
 

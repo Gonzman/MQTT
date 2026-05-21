@@ -1,12 +1,7 @@
 <template>
-    <UCard
-        class="surface-card category-card"
-        :class="{ 'is-dragging': isDragging }"
-        draggable="true"
-        @dragstart.self="startCategoryDrag($event, category.id, category.name)"
-        @dragend="clearDragState"
-        @dragover.stop.prevent="handleDragOver"
-    >
+    <UCard class="surface-card category-card" :class="{ 'is-dragging': isDragging }" draggable="true"
+        @dragstart.self="startCategoryDrag($event, category.id, category.name)" @dragend="clearDragState"
+        @dragover.stop.prevent="handleDragOver">
         <div class="category-header">
             <div class="title">
                 <p class="label">{{ category.name }}</p>
@@ -17,13 +12,8 @@
                 <Modal :category="category.id" v-model="nodes"></Modal>
                 <Rename :category="category" v-model="model" @mousedown.stop></Rename>
                 <UTooltip text="Delete Category">
-                    <UButton
-                        @mousedown.stop
-                        @click.stop="deleteCategory"
-                        aria-label="Delete category"
-                        color="error"
-                        icon="lucide:trash-2"
-                    />
+                    <UButton @mousedown.stop @click.stop="deleteCategory" aria-label="Delete category" color="error"
+                        icon="lucide:trash-2" />
                 </UTooltip>
             </div>
         </div>
@@ -35,7 +25,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref } from "vue";
+import { computed, onMounted, onUnmounted, ref, type Ref } from "vue";
 import Node from "./Node.vue";
 import type { components } from "@/types/schema";
 import client from "@/lib/client";
@@ -53,6 +43,7 @@ import {
 } from "@/lib/dd";
 
 import Rename from "./modal/category/Rename.vue";
+import dataManager from "@/lib/dataManager";
 
 const props = defineProps<{
     category: components["schemas"]["CategoryDto"];
@@ -60,7 +51,7 @@ const props = defineProps<{
 
 const model = defineModel<components["schemas"]["CategoryDto"][]>({ required: true });
 
-const nodes = ref<components["schemas"]["NodeDto"][]>([]);
+const nodes: Ref<components["schemas"]["NodeDto"][]> = dataManager.getNodes(props.category.id);
 const isDragging = computed(() => isDraggingCategory(props.category.id));
 
 onMounted(async () => {
