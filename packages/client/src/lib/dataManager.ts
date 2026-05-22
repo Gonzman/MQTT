@@ -2,7 +2,6 @@ import { ref } from "vue";
 import type { Ref } from "vue";
 import client, { url } from "./client";
 import type { components } from "@/types/schema";
-import { th } from "@nuxt/ui/runtime/locale/index.js";
 
 type ValueDto = components["schemas"]["ValueDto"];
 
@@ -28,7 +27,7 @@ interface NodeMovedEvent {
     };
 }
 
-type wsData = ValueCreatedEvent | ValueDeletedEvent;
+type wsData = ValueCreatedEvent | ValueDeletedEvent | NodeMovedEvent;
 
 class DataManager {
     private static instance: DataManager;
@@ -64,12 +63,20 @@ class DataManager {
                 return;
             }
 
-            if (payload.event === "VALUE_CREATED") {
-                this.handleValueCreated(payload);
-            }
+            switch (payload.event) {
+                case "VALUE_CREATED":
+                    this.handleValueCreated(payload);
+                    break;
+                case "VALUE_DELETED":
+                    this.handleValueDeleted(payload);
+                    break;
+                case "NODE_MOVED":
+                    //this.nodeMoved(payload);
+                    break;
 
-            if (payload.event === "VALUE_DELETED") {
-                this.handleValueDeleted(payload);
+                default:
+                    console.log("Unhandeld WS Event" + e.data);
+                    break;
             }
         });
 
@@ -160,6 +167,34 @@ class DataManager {
         } finally {
             delete this.pending[id];
         }
+    }
+
+    private nodeMoved(payload: NodeMovedEvent) {
+        console.log(`Move${JSON.stringify(payload.data)}`);
+        console.log(`Categories: ${this._categories.value.toString()}`);
+        const node = this._nodes[payload.data.categoryId]?.value.find((x) => x.id == payload.data.id);
+        if (!node) {
+            return;
+        }
+
+        this._nodes[payload.data.categoryId]!.value = this._nodes[payload.data.categoryId]!.value.filter(
+            (x) => x.id != payload.data.id
+        );
+
+        if (!this._nodes[payload.data.newCategoryId]) {
+            client
+                .GET("/categories/{categoryId}", { params: { path: { categoryId: payload.data.newCategoryId } } })
+                .then((data) => {
+                    if (!data.data) {
+                        return;
+                    }
+                    this._categories.value.push(data.data);
+                    this._nodes[payload.data.newCategoryId] = ref([]);
+                });
+        }
+
+        const nodesNewCategory = this._nodes[payload.data.newCategoryId]!;
+        nodesNewCategory.value.push(node);
     }
 
     public static getInstance(): DataManager {
