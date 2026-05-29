@@ -17,7 +17,7 @@
             </USelectMenu>
         </div>
         <div class="modal-actions">
-            <UButton color="success" @click="createNode" type="submit">Create Node</UButton>
+            <UButton color="success" @click="createNode" onkeypress="enter">Create Node</UButton>
         </div>
     </form>
 </template>
